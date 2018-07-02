@@ -37,6 +37,7 @@ source(paste(file_dir,"basicFun.R",sep = '/'))
 source(paste(file_dir,"DataInitialization.R",sep = '/'))
 source(paste(file_dir,"Alignment_speed_distance_fun.R",sep = '/'))
 
+rm(pass_off,pass_off_2)
 # 输入文件：
 # 1. 驾驶模拟实验数据
 # 2. 平曲线数据
