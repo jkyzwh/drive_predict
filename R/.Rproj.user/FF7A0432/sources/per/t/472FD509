@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1530545815798.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4116145088",
+    "id" : "472FD509",
+    "lastKnownWriteTime" : 1530547362,
+    "last_content_update" : 1530547362198,
+    "path" : "~/Github/drive_predict/R/Alignment_speed_distance_main.R",
+    "project_path" : "Alignment_speed_distance_main.R",
+    "properties" : {
+        "cursorPosition" : "19,29",
+        "scrollLine" : "11"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
