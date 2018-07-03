@@ -26,7 +26,7 @@ OStype <- Sys.info()['sysname']
 
 # 导入需要的标准函数功能源文件
 library (stats)
-library(stringr)
+library (stringr)
 
 #加载位于上一级文件夹中的basicFun.R脚本文件，加载常用的基本函数，例如排序函数等
 pass_off <- as.data.frame(str_locate_all(file_dir,"/"))
