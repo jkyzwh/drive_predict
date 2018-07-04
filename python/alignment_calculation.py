@@ -15,14 +15,16 @@ Created on Tue Jul 04 2018
 
 import sys
 scrip_dir = sys.path[3] #d当前脚本所在路径
+#--------------------------------------------------
 import platform
 operat_system = platform.system()
 if operat_system == 'Windows':
     alignment_datapath = 'D:\\PROdata\\Data\\landxml\\SZhighway_Alignment.csv'
     para_datapath = 'D:\\PROdata\\Data\\landxml\\SZhighway_ParaCurve.csv'
 else:
-    pass
-
+    alignment_datapath ='/home/zhwh/My_cloud/data/landxml/SZhighway_Alignment.csv'
+    para_datapath = '/home/zhwh/My_cloud/data/landxml/SZhighway_ParaCurve.csv'
+    
 #=============================================================================
 '''
 输入设计速度作为全局变量
@@ -53,8 +55,7 @@ elif design_speed == 110:
 elif design_speed == 120:
     view_distance = 270
 else:
-    print('design speed is not correct')
-        
+    print('design speed is not correct')        
     
 #==============================================================================
 # 导入平曲线数据和竖曲线数据
@@ -69,6 +70,24 @@ import math
 alignment_import = pd.read_csv(alignment_datapath,header=0,encoding = 'utf-8')
 para_import = pd.read_csv(para_datapath,header=0,encoding = 'utf-8')
 #---------------------------------------------------------------------
+'''
+修正平曲线表，将计算误差导致的极短直线段清除掉
+定义函数
+'''
+def alignment_check(alignment_data,L=5): #L是用于判断需要修正的长度
+    A = alignment_data
+    select = []
+    for i in range(len(A.index)):
+        if A['Length'].iloc[i] >=L :
+            select.append(A.index[i])
+        else:
+            A['K_Start'].values[i+1] = A['K_Start'].iloc[i]
+            A['Length'].values[i+1] = A['K_Start'].iloc[i+2]-A['K_Start'].iloc[i+1]
+    B = A.loc[select]
+    return(B)
+
+alignment_fix = alignment_check(alignment_import,5)
+#----------------------------------------------------------------------
 '''
 生成从起点至终点的整桩号矩阵，纵轴是间距为1的桩号数列，横轴包括：
 1.极坐标转角
