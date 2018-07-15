@@ -154,7 +154,7 @@ def direction_spiral(l, Ls, R1, R2, dir1, dir2):
 '''
 计算每个桩号的方位角
 '''
-temp_dir = pd.DataFrame(columns = ['k_location', 'Type', 'dir'])
+temp_dir = pd.DataFrame(columns=['k_location', 'Type', 'dir'])
 
 for i in range(len(alignment_fix.index)):
     aa = alignment_fix.iloc[i]
@@ -235,7 +235,6 @@ para_import = para_import[['NO', 'K_Start', 'K_End', 'Length', 'Height',
 
 temp_height = pd.DataFrame(columns=['k_location', 'height'])
 
-
 for i in range(len(para_import.index)-1):
     aa = para_import.iloc[i]
     h1 = aa['Height']
@@ -256,6 +255,7 @@ road_info = pd.merge(temp_dir, temp_height, on='k_location')
 del(temp_height, temp_dir)
 
 # 绘制方位角和纵断面图
+import matplotlib.pyplot as plt
 plt.figure(num=1)
 plt.plot(road_info['k_location'], road_info['height'])
 
@@ -276,41 +276,95 @@ plt.show()
 # 初始化列名列表
 colnames = ['k_location']
 for i in range(1, view_distance+1):
-    temp = 'k_'+str(i)
-    colnames.append(temp)
+    temp1 = 'len_'+str(i)
+    colnames.append(temp1)
+    temp2 = 'angle_'+str(i)
+    colnames.append(temp2)
+    temp3 = 'heightdif_'+str(i)
+    colnames.append(temp3)
+
+del(temp1, temp2, temp3)
 # 计算行数
-row_num = len(road_info.index)-view_distance
+# row_num = len(road_info.index)-view_distance
 
 # 初始化空白数据框
-road_view = pd.DataFrame(index=np.arange(0, row_num), columns=colnames)
-
+# road_view = pd.DataFrame(index=np.arange(0, row_num), columns=colnames)
+road_view_up = pd.DataFrame(columns=colnames)
+road_view_down = pd.DataFrame(columns=colnames)
 '''
 计算驾驶人行驶过程中几何线形的视觉矩阵
 '''
-
-for i in range(len(road_view.index)):
-    road_view['k_location'].values[i] = road_info['k_location'].iloc[i]
-
-
-for i in range(len(road_view.index)):
+#
+# for i in range(len(road_view.index)):
+#     road_view['k_location'].values[i] = road_info['k_location'].iloc[i]
+'''
+上行方向计算
+'''
+for i in range(len(road_info.index)-view_distance-2):
     temp_row = [road_info['k_location'].iloc[i]]
     for j in range(1, view_distance+1):
-        a = road_info['dir'].iloc[i+j] - road_info['dir'].iloc[i]
-        b = road_info['k_location'].iloc[i+j] - road_info['k_location'].iloc[i]
+        a = road_info['k_location'].iloc[i+j] - road_info['k_location'].iloc[i]
+        b = road_info['dir'].iloc[i + j] - road_info['dir'].iloc[i]
         c = road_info['height'].iloc[i+j] - road_info['height'].iloc[i]
-        temp = [a,b,c]
-        temp_row.append(temp)
-        print(j)
+        temp_row.append(a)
+        temp_row.append(b)
+        temp_row.append(c)
+        print('up', 'i=', i, 'j=', j)
+    d = pd.DataFrame(np.array(temp_row)).T
+    d.columns = colnames
+    road_view_up = pd.concat([road_view_up, d], ignore_index=True)
+    # print('i=', i)
+
+'''
+下行方向计算
+'''
+road_info_down = road_info.sort_values(['k_location'], ascending=False)
+
+for i in range(len(road_info_down.index)-view_distance-2):
+    temp_row = [road_info_down['k_location'].iloc[i]]
+    for j in range(1, view_distance+1):
+        a = abs(road_info_down['k_location'].iloc[i+j] - road_info_down['k_location'].iloc[i])
+        b = road_info_down['dir'].iloc[i + j] - road_info_down['dir'].iloc[i]
+        c = road_info_down['height'].iloc[i+j] - road_info_down['height'].iloc[i]
+        temp_row.append(a)
+        temp_row.append(b)
+        temp_row.append(c)
+        print('down', 'i=', i, 'j=', j)
+    d = pd.DataFrame(np.array(temp_row)).T
+    d.columns = colnames
+    road_view_down = pd.concat([road_view_down, d], ignore_index=True)
+    # print('i=', i)
 
 
 
-del(row_num, colnames)
+del(colnames, i, j, a, b, c, d, temp_row)
+# =============================================================================
+'''
+程序执行时间较长，中间成果临时存储在磁盘上
+'''
+road_view_up.to_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', index=False, sep=',')
+road_view_down.to_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', index=False, sep=',')
+
+road_view_up = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', header=0, encoding='utf-8')
+road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', header=0, encoding='utf-8')
 
 # ==============================================================================
 '''
-0. 将桩号序列移植到road_view
-1. 判断当前桩号所在的曲线单元类型
-2. 判断可视距离内的线元的数量
-3. 根据公式计算方位角和视线距离
+利用可视化，检查输入是否正确
+左右角的因素尚未考虑
+上下行的因素尚未考虑
 '''
+aa = road_view_up.iloc[15486]
+x = aa.iloc[range(1, (len(aa)-2), 3)]
+angle = aa.iloc[range(2, (len(aa)-1), 3)]
+h = aa.iloc[range(3, len(aa), 3)]
+
+
+plt.figure(num=10)
+plt.plot(x, angle)
+plt.show()
+
+plt.figure(num=11)
+plt.plot(x, h)
+plt.show()
 
