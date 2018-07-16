@@ -2,4 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< Updated upstream
 python/.idea/workspace.xml
+=======
+
+python/\.spyproject/
+>>>>>>> Stashed changes
