@@ -14,23 +14,25 @@ Created on Tue Jul 04 2018
 '''
 
 import sys
-scrip_dir = sys.path[3] #d当前脚本所在路径
-#--------------------------------------------------
+
+scrip_dir = sys.path[3]  # d当前脚本所在路径
+# --------------------------------------------------
 import platform
+
 operat_system = platform.system()
 if operat_system == 'Windows':
     alignment_datapath = 'D:\\PROdata\\Data\\landxml\\SZhighway_Alignment.csv'
     para_datapath = 'D:\\PROdata\\Data\\landxml\\SZhighway_ParaCurve.csv'
 else:
-    alignment_datapath ='/home/zhwh/My_cloud/data/landxml/SZhighway_Alignment.csv'
+    alignment_datapath = '/home/zhwh/My_cloud/data/landxml/SZhighway_Alignment.csv'
     para_datapath = '/home/zhwh/My_cloud/data/landxml/SZhighway_ParaCurve.csv'
-    
-#=============================================================================
+
+# =============================================================================
 '''
 输入设计速度作为全局变量
 '''
-design_speed = 100 #根据需要修改
-#=============================================================================
+design_speed = 100  # 根据需要修改
+# =============================================================================
 '''
 定义不同设计速度对应的可视距离
 '''
@@ -51,49 +53,53 @@ elif design_speed == 90:
 elif design_speed == 100:
     view_distance = 225
 elif design_speed == 110:
-    view_distance = 255    
+    view_distance = 255
 elif design_speed == 120:
     view_distance = 270
 else:
-    print('design speed is not correct')        
-    
-#==============================================================================
+    print('design speed is not correct')
+
+# ==============================================================================
 # 导入平曲线数据和竖曲线数据
-#==============================================================================
+# ==============================================================================
 import numpy as np
 import pandas as pd
 import math
+
 '''
 导入来自landxml的平曲线数据表和竖曲线数据表
 '''
-#--------------------------------------------------------------------
-alignment_import = pd.read_csv(alignment_datapath,header=0,encoding = 'utf-8')
-para_import = pd.read_csv(para_datapath,header=0,encoding = 'utf-8')
-#---------------------------------------------------------------------
+# --------------------------------------------------------------------
+alignment_import = pd.read_csv(alignment_datapath, header=0, encoding='utf-8')
+para_import = pd.read_csv(para_datapath, header=0, encoding='utf-8')
+# ---------------------------------------------------------------------
 '''
 修正平曲线表，将计算误差导致的极短直线段清除掉
 定义函数
 '''
-def alignment_check(alignment_data,L=5): #L是用于判断需要修正的长度
+
+
+def alignment_check(alignment_data, L=5):  # L是用于判断需要修正的长度
     A = alignment_data
     select = []
     for i in range(len(A.index)):
-        if A['Length'].iloc[i] >=L :
+        if A['Length'].iloc[i] >= L:
             select.append(A.index[i])
         else:
-            A['K_Start'].values[i+1] = A['K_Start'].iloc[i]
-            
-            A['Length'].values[i+1] = A['K_Start'].iloc[i+2]-A['K_Start'].iloc[i+1]
-    B = A.loc[select]
-    return(B)
+            A['K_Start'].values[i + 1] = A['K_Start'].iloc[i]
 
-alignment_fix = alignment_check(alignment_import,5)
+            A['Length'].values[i + 1] = A['K_Start'].iloc[i + 2] - A['K_Start'].iloc[i + 1]
+    B = A.loc[select]
+    return (B)
+
+
+alignment_fix = alignment_check(alignment_import, 5)
 
 # 将数据框整理为喜闻乐见的形式
 alignment_fix['K_End'] = alignment_fix['K_Start'] + alignment_fix['Length']
-alignment_fix = alignment_fix [ ['NO','K_Start', 'K_End','Length','Road_Type','Radius','Direction',
-'DirStart', 'DirEnd', 'Chord', 'delta_theta', 'constant', 'Start_X',
-'Start_Y', 'End_X', 'End_Y', 'Center_X', 'Center_Y' ] ]
+alignment_fix = alignment_fix[['NO', 'K_Start', 'K_End', 'Length', 'Road_Type', 'Radius', 'Direction',
+                               'DirStart', 'DirEnd', 'Chord', 'delta_theta', 'constant', 'Start_X',
+                               'Start_Y', 'End_X', 'End_Y', 'Center_X', 'Center_Y']]
 
 '''
 1. 根据相邻曲线表，填写直线段方位角
@@ -115,41 +121,46 @@ for i in range(len(alignment_fix.index)):
         if i == 0:
             alignment_fix['DirStart'].values[i] = alignment_fix['DirStart'].iloc[i + 1]
             alignment_fix['DirEnd'].values[i] = alignment_fix['DirStart'].iloc[i + 1]
-        elif i == (len(alignment_fix.index)-1):
+        elif i == (len(alignment_fix.index) - 1):
             alignment_fix['DirStart'].values[i] = alignment_fix['DirEnd'].iloc[i - 1]
             alignment_fix['DirEnd'].values[i] = alignment_fix['DirEnd'].iloc[i - 1]
-        elif i > 0 and i < (len(alignment_fix.index)-1):
+        elif i > 0 and i < (len(alignment_fix.index) - 1):
             alignment_fix['DirStart'].values[i] = alignment_fix['DirEnd'].iloc[i - 1]
             alignment_fix['DirEnd'].values[i] = alignment_fix['DirStart'].iloc[i + 1]
 
-
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 '''
 生成逐桩方位角表
 1. 桩号
 2. 方位角
 将单元内方位角变化根据曲率分配至每个桩号
 '''
-#直线上每一点的坐标计算
-def direction_line (l, Ll, dir1, dir2):
-    bili = l/Ll
-    x = bili*(dir2-dir1)+dir1
-    return(x)
 
-#圆曲线上每一点的坐标计算
+
+# 直线上每一点的坐标计算
+def direction_line(l, Ll, dir1, dir2):
+    bili = l / Ll
+    x = bili * (dir2 - dir1) + dir1
+    return (x)
+
+
+# 圆曲线上每一点的坐标计算
 def direction_curve(l, Lr, dir1, dir2):
-    bili = l/Lr
-    x = bili*(dir2-dir1)+dir1
-    return(x)
+    bili = l / Lr
+    x = bili * (dir2 - dir1) + dir1
+    return (x)
+
+
 # 缓和曲线上每一点的坐标计算
 
 def direction_spiral(l, Ls, R1, R2, dir1, dir2):
     import math
-    R = l/Ls*(R2-R1)+R1
-    x = (R-R1)*(dir2-dir1)/(R2-R1)+dir1
-    return(x)
+    R = l / Ls * (R2 - R1) + R1
+    x = (R - R1) * (dir2 - dir1) / (R2 - R1) + dir1
+    return (x)
 
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 
 '''
 计算每个桩号的方位角
@@ -207,7 +218,7 @@ for i in range(len(alignment_fix.index)):
     else:
         pass
 
-del(aa, a, b, c, d, i, j, k, l, Ll, Lr, Ls, R1, R2, dir1, dir2)
+del (aa, a, b, c, d, i, j, k, l, Ll, Lr, Ls, R1, R2, dir1, dir2)
 
 '''
 利用matplotlib可视化，检查方位角计算是否正确
@@ -224,9 +235,9 @@ del(aa, a, b, c, d, i, j, k, l, Ll, Lr, Ls, R1, R2, dir1, dir2)
 
 para_import['K_End'] = 0.0
 para_import['Height_End'] = 0.0
-for i in range(len(para_import.index)-1):
-    para_import['K_End'].values[i] = para_import['K_Start'].iloc[i+1]
-    para_import['Height_End'].values[i] = para_import['Height'].iloc[i+1]
+for i in range(len(para_import.index) - 1):
+    para_import['K_End'].values[i] = para_import['K_Start'].iloc[i + 1]
+    para_import['Height_End'].values[i] = para_import['Height'].iloc[i + 1]
 para_import['Length'] = para_import['K_End'] - para_import['K_Start']
 para_import['i'] = (para_import['Height_End'] - para_import['Height']) / para_import['Length']
 
@@ -235,7 +246,7 @@ para_import = para_import[['NO', 'K_Start', 'K_End', 'Length', 'Height',
 
 temp_height = pd.DataFrame(columns=['k_location', 'height'])
 
-for i in range(len(para_import.index)-1):
+for i in range(len(para_import.index) - 1):
     aa = para_import.iloc[i]
     h1 = aa['Height']
     h2 = aa['Height_End']
@@ -245,24 +256,24 @@ for i in range(len(para_import.index)-1):
 
     for j in range(a + 1, b + 1):
         l = j - math.floor(aa['K_Start'])
-        c = l/L*(h2-h1)+h1
+        c = l / L * (h2 - h1) + h1
         d = pd.DataFrame([[j, c]], columns=['k_location', 'height'])
         temp_height = pd.concat([temp_height, d], ignore_index=True)
         print(j, c)
-del(aa, a, b, c, d, i, j, l, L, h1, h2)
+del (aa, a, b, c, d, i, j, l, L, h1, h2)
 
 road_info = pd.merge(temp_dir, temp_height, on='k_location')
-del(temp_height, temp_dir)
+del (temp_height, temp_dir)
 
 # 绘制方位角和纵断面图
 import matplotlib.pyplot as plt
+
 plt.figure(num=1)
 plt.plot(road_info['k_location'], road_info['height'])
 
 plt.figure(num=2)
 plt.plot(road_info['k_location'], road_info['dir'], color='red')
 plt.show()
-
 
 '''
 生成从起点至终点的整桩号矩阵，纵轴是间距为1的桩号数列，横轴是可视距离内每个点的
@@ -275,15 +286,15 @@ plt.show()
 '''
 # 初始化列名列表
 colnames = ['k_location']
-for i in range(1, view_distance+1):
-    temp1 = 'len_'+str(i)
+for i in range(1, view_distance + 1):
+    temp1 = 'len_' + str(i)
     colnames.append(temp1)
-    temp2 = 'angle_'+str(i)
+    temp2 = 'angle_' + str(i)
     colnames.append(temp2)
-    temp3 = 'heightdif_'+str(i)
+    temp3 = 'heightdif_' + str(i)
     colnames.append(temp3)
 
-del(temp1, temp2, temp3)
+del (temp1, temp2, temp3)
 # 计算行数
 # row_num = len(road_info.index)-view_distance
 
@@ -300,12 +311,12 @@ road_view_down = pd.DataFrame(columns=colnames)
 '''
 上行方向计算
 '''
-for i in range(len(road_info.index)-view_distance-2):
+for i in range(len(road_info.index) - view_distance - 2):
     temp_row = [road_info['k_location'].iloc[i]]
-    for j in range(1, view_distance+1):
-        a = road_info['k_location'].iloc[i+j] - road_info['k_location'].iloc[i]
+    for j in range(1, view_distance + 1):
+        a = road_info['k_location'].iloc[i + j] - road_info['k_location'].iloc[i]
         b = road_info['dir'].iloc[i + j] - road_info['dir'].iloc[i]
-        c = road_info['height'].iloc[i+j] - road_info['height'].iloc[i]
+        c = road_info['height'].iloc[i + j] - road_info['height'].iloc[i]
         temp_row.append(a)
         temp_row.append(b)
         temp_row.append(c)
@@ -320,12 +331,12 @@ for i in range(len(road_info.index)-view_distance-2):
 '''
 road_info_down = road_info.sort_values(['k_location'], ascending=False)
 
-for i in range(len(road_info_down.index)-view_distance-2):
+for i in range(len(road_info_down.index) - view_distance - 2):
     temp_row = [road_info_down['k_location'].iloc[i]]
-    for j in range(1, view_distance+1):
-        a = abs(road_info_down['k_location'].iloc[i+j] - road_info_down['k_location'].iloc[i])
+    for j in range(1, view_distance + 1):
+        a = abs(road_info_down['k_location'].iloc[i + j] - road_info_down['k_location'].iloc[i])
         b = road_info_down['dir'].iloc[i + j] - road_info_down['dir'].iloc[i]
-        c = road_info_down['height'].iloc[i+j] - road_info_down['height'].iloc[i]
+        c = road_info_down['height'].iloc[i + j] - road_info_down['height'].iloc[i]
         temp_row.append(a)
         temp_row.append(b)
         temp_row.append(c)
@@ -335,18 +346,31 @@ for i in range(len(road_info_down.index)-view_distance-2):
     road_view_down = pd.concat([road_view_down, d], ignore_index=True)
     # print('i=', i)
 
-
-
-del(colnames, i, j, a, b, c, d, temp_row)
+del (colnames, i, j, a, b, c, d, temp_row)
 # =============================================================================
 '''
 程序执行时间较长，中间成果临时存储在磁盘上
 '''
-road_view_up.to_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', index=False, sep=',')
-road_view_down.to_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', index=False, sep=',')
+if operat_system == 'Windows':
+    road_view_up.to_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', index=False, sep=',')
+    road_view_down.to_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', index=False, sep=',')
+elif operat_system == 'Linux':
+    road_view_up.to_csv('/home/zhwh/My_cloud/data/landxml/road_view_up.csv', index=False, sep=',')
+    road_view_down.to_csv('/home/zhwh/My_cloud/data/landxml/road_view_down.csv', index=False, sep=',')
+else:
+    pass
 
-road_view_up = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', header=0, encoding='utf-8')
-road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', header=0, encoding='utf-8')
+'''
+需要时将存储在硬盘上的文件读入内存
+'''
+# if operat_system == 'Windows':
+#     road_view_up = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', header=0, encoding='utf-8')
+#     road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', header=0, encoding='utf-8')
+# elif operat_system == 'Linux':
+#     road_view_up = pd.read_csv('/home/zhwh/My_cloud/data/landxml/road_view_up.csv', header=0, encoding='utf-8')
+#     road_view_down = pd.read_csv('/home/zhwh/My_cloud/data/landxml/road_view_down.csv', header=0, encoding='utf-8')
+# else:
+#     pass
 
 # ==============================================================================
 '''
@@ -354,17 +378,16 @@ road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', h
 左右角的因素尚未考虑
 上下行的因素尚未考虑
 '''
-aa = road_view_up.iloc[15486]
-x = aa.iloc[range(1, (len(aa)-2), 3)]
-angle = aa.iloc[range(2, (len(aa)-1), 3)]
-h = aa.iloc[range(3, len(aa), 3)]
-
-
-plt.figure(num=10)
-plt.plot(x, angle)
-plt.show()
-
-plt.figure(num=11)
-plt.plot(x, h)
-plt.show()
-
+# aa = road_view_up.iloc[15486]
+# x = aa.iloc[range(1, (len(aa)-2), 3)]
+# angle = aa.iloc[range(2, (len(aa)-1), 3)]
+# h = aa.iloc[range(3, len(aa), 3)]
+#
+#
+# plt.figure(num=10)
+# plt.plot(x, angle)
+# plt.show()
+#
+# plt.figure(num=11)
+# plt.plot(x, h)
+# plt.show()
