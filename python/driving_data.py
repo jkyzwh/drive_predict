@@ -22,10 +22,12 @@ import sys
 import platform
 operat_system = platform.system()
 
+
 if operat_system == 'Windows':
-    scrip_dir = sys.path[12]  # d当前脚本所在路径
+    scrip_dir = sys.path[12]  # d当前脚本所在的project路径
 elif operat_system == 'Linux':
-    scrip_dir = sys.path[3]  # d当前脚本所在路径
+    scrip_dir = sys.path[7] + '/python'  # d当前脚本所在的project路径
+    sys.path.append(scrip_dir)  # 将当前目录加入搜索路径
 
 import simData as sim
 import simConst as const
