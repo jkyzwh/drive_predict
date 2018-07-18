@@ -52,6 +52,9 @@ else:
 '''
 导入驾驶模拟器试验数据
 '''
+
+
+
 ver = 4.0  # 使用的数据来自于winroad的版本号
 colnames = const.simdata_colname(ver)
 
