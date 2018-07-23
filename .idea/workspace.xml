@@ -10,8 +10,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/drive_predict.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/drive_predict.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/R/.Rhistory" beforeDir="false" afterPath="$PROJECT_DIR$/R/.Rhistory" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/driving_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/driving_data.py" afterDir="false" />
+=======
+>>>>>>> Stashed changes
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -25,6 +28,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+<<<<<<< Updated upstream
       <file leaf-file-name="alignment_calculation_ver0.2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -39,6 +43,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <caret selection-end-line="15" selection-end-column="80" />
+=======
+      <file leaf-file-name="driving_data.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="901">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
+>>>>>>> Stashed changes
               <folding>
                 <element signature="e#582#592#0" expanded="true" />
               </folding>
@@ -46,11 +57,22 @@
           </provider>
         </entry>
       </file>
+<<<<<<< Updated upstream
       <file leaf-file-name="train_tensorflow.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="260">
               <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
+=======
+      <file leaf-file-name="simData.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python/simData.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="277">
+              <caret line="119" selection-start-line="119" selection-end-line="119" />
+              <folding>
+                <element signature="e#194#213#0" expanded="true" />
+              </folding>
+>>>>>>> Stashed changes
             </state>
           </provider>
         </entry>
@@ -107,7 +129,11 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+<<<<<<< Updated upstream
     <property name="last_opened_file_path" value="C:/ProgramData/Anaconda3/envs/tensorflow" />
+=======
+    <property name="last_opened_file_path" value="$USER_HOME$" />
+>>>>>>> Stashed changes
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -154,15 +180,24 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <layout>
+<<<<<<< Updated upstream
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46888888" visible="true" weight="0.19722815" />
+=======
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48692152" visible="true" weight="0.1809836" />
+>>>>>>> Stashed changes
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5006485" side_tool="true" weight="0.33909574" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32978722" />
+<<<<<<< Updated upstream
       <window_info active="true" anchor="bottom" id="Python Console" order="7" sideWeight="0.4993515" visible="true" weight="0.5016611" />
       <window_info id="Structure" order="1" sideWeight="0.5311111" side_tool="true" visible="true" weight="0.19722815" />
+=======
+      <window_info active="true" anchor="bottom" id="Python Console" order="7" sideWeight="0.4993515" visible="true" weight="0.33909574" />
+      <window_info id="Structure" order="1" sideWeight="0.51307845" side_tool="true" visible="true" weight="0.1809836" />
+>>>>>>> Stashed changes
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" sideWeight="0.501006" side_tool="true" weight="0.17574579" />
@@ -179,10 +214,57 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
           <caret line="14" selection-start-line="14" selection-end-line="14" />
+=======
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="901">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1887">
+          <caret line="112" column="26" lean-forward="true" selection-end-line="112" selection-end-column="26" />
+          <folding>
+            <element signature="e#194#213#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6052">
+          <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="86" selection-start-line="62" selection-end-line="86" />
+          <folding>
+            <element signature="e#194#213#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="901">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+>>>>>>> Stashed changes
         </state>
       </provider>
     </entry>
@@ -529,6 +611,7 @@
     <entry file="file://$PROJECT_DIR$/python/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/python/simConst.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3520">
@@ -547,15 +630,36 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7060">
           <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
+=======
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/driving_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="15" selection-end-column="80" />
+        <state relative-caret-position="901">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
           <folding>
             <element signature="e#582#592#0" expanded="true" />
+          </folding>
+>>>>>>> Stashed changes
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
+        <state>
+          <caret selection-end-line="15" selection-end-column="80" />
+=======
+        <state relative-caret-position="277">
+          <caret line="119" selection-start-line="119" selection-end-line="119" />
+>>>>>>> Stashed changes
+          <folding>
+            <element signature="e#194#213#0" expanded="true" />
           </folding>
         </state>
       </provider>

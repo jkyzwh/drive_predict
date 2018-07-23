@@ -26,7 +26,7 @@ operat_system = platform.system()
 if operat_system == 'Windows':
     scrip_dir = sys.path[11] + '/python'  # d当前脚本所在的project路径
 elif operat_system == 'Linux':
-    scrip_dir = sys.path[7] + '/python'  # d当前脚本所在的project路径
+    scrip_dir = sys.path[8] + '/python'  # d当前脚本所在的project路径
 
 sys.path.append(scrip_dir)  # 将当前目录加入搜索路径
 
@@ -55,7 +55,13 @@ else:
 '''
 import os
 
-simdata_path = 'D:\\PROdata\\Data\\S_Z'
+if operat_system == 'Windows':
+    simdata_path = 'D:\\PROdata\\Data\\S_Z'
+elif operat_system == 'Linux':
+    simdata_path = '/home/zhwh/Data/S_Z'
+else:
+    pass
+
 ver = 4.0  # 使用的数据来自于winroad的版本号
 colnames = const.simdata_colname(ver)
 
@@ -119,7 +125,7 @@ del(A, B)
 ID_list = sim_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所有的驾驶人ID
 training_data = pd.DataFrame()
 for i in range(len(ID_list)):
-    locals()['ID_'+str(i)] = sim_data[sim_data['driver_ID'] == 'ID_0']
+    locals()['ID_'+str(i)] = sim_data[sim_data['driver_ID'] == ('ID_'+str(i))]
     if ver == 4:
         locals()['ID_'+str(i)] = locals()['ID_'+str(i)][['driver_ID', "Dis", "Speed", "Acc_surge", "Acc_sway", 'Steering',
                                                          'Acc_pedal', 'Brake_pedal']]
@@ -140,6 +146,11 @@ elif operat_system == 'Linux':
     training_data.to_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', index=False, sep=',')
 else:
     pass
+
+
+
+
+
 
 
 

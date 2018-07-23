@@ -10,34 +10,84 @@ Created on Tue Jul 17 2018
 """
 # ==============================================================================
 import os
-
+# import sys
+import platform
+operation_system = platform.system()
 os.environ['KERAS_BACKEND'] = 'tensorflow'
-import keras
 
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
+import pandas as pd
 
-x_data = np.random.rand(100).astype(np.float32)
-y_data = x_data * 0.1 + 0.3
+if operation_system == 'Windows':
+    training_data = pd.read_csv('D:\\PROdata\\Data\\landxml\\training_data.csv', header=0, encoding='utf-8')
+elif operation_system == 'Linux':
+    training_data = pd.read_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', header=0, encoding='utf-8')
+else:
+    pass
+'''
+将ID为零的驾驶人数据作为测试集
+其余驾驶人数据作为训练集
+'''
+ID_list = training_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所有的驾驶人ID
+data_train = training_data[training_data['driver_ID'] != ID_list[0]]
+data_test = training_data[training_data['driver_ID'] == ID_list[0]]
 
-Weights = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
-biases = tf.Variable(tf.zeros([1]))
+'''
+将训练集和测试集均转化为numpy数组
+'''
 
-y = Weights * x_data + biases
+x_train = np.array(data_train.iloc[0:len(data_train), list(range(9, len(data_train.iloc[0])))])
+y_train = np.array(data_train['Speed'])
+len(x_train)-len(y_train)
 
-loss = tf.reduce_mean(tf.square(y-y_data))
-optimizer = tf.train.GradientDescentOptimizer(0.5)
-train = optimizer.minimize(loss)
+x_test = np.array(data_test.iloc[0:len(data_test), list(range(9, len(data_test.iloc[0])))])
+y_test = np.array(data_test['Speed'])
+len(x_test)-len(y_test)
 
-init = tf.initialize_all_variables()
+x_train.astype(np.float32)
+y_train.astype(np.float32)
+x_test.astype(np.float32)
+y_test.astype(np.float32)
 
 
-sess = tf.Session()
-sess.run(init)
+'''
+构建神经网络，利用训练集进行测试
+'''
+
+import keras
+from keras.models import Sequential
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
+from keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import SGD, Adadelta, Adagrad
+from keras.utils import np_utils, generic_utils
+from keras.utils import plot_model
 
 
-for step in range(5001):
-    sess.run(train)
-    if step % 10 ==0:
-        print(step, sess.run(Weights), sess.run(biases))
-sess.close()
+
+
+# x_data = np.random.rand(100).astype(np.float32)
+# y_data = x_data * x_data * 0.1 + 0.3
+#
+# Weights = tf.Variable(tf.random_uniform([1], -1.0, 1.0))
+# biases = tf.Variable(tf.zeros([1]))
+#
+# y = Weights * x_data + biases
+#
+# loss = tf.reduce_mean(tf.square(y-y_data))
+# optimizer = tf.train.GradientDescentOptimizer(0.5)
+# train = optimizer.minimize(loss)
+#
+# init = tf.initialize_all_variables()
+#
+#
+# sess = tf.Session()
+# sess.run(init)
+#
+#
+# for step in range(5001):
+#     sess.run(train)
+#     if step % 10 == 0:
+#         print(step, sess.run(Weights), sess.run(biases))
+# sess.close()
