@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/python/driving_data.py" line="105" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="12ae8fd9-7805-4df3-a7e9-2f785554ee75" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/python/train_tensorflow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Zhwh_notbook.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Zhwh_notbook.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/drive_predict.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/drive_predict.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/R/.Rhistory" beforeDir="false" afterPath="$PROJECT_DIR$/R/.Rhistory" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/driving_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/driving_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,17 +28,17 @@
       <file leaf-file-name="alignment_calculation_ver0.2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6052">
-              <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
+            <state relative-caret-position="7060">
+              <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="driving_data.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="driving_data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/driving_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+            <state>
+              <caret selection-end-line="15" selection-end-column="80" />
               <folding>
                 <element signature="e#582#592#0" expanded="true" />
               </folding>
@@ -38,14 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="simData.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <file leaf-file-name="train_tensorflow.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1445">
-              <caret line="86" selection-start-line="62" selection-end-line="86" />
-              <folding>
-                <element signature="e#194#213#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="260">
+              <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -68,21 +73,20 @@
         <option value="$PROJECT_DIR$/python/alignment_calculation_ver0.2.py" />
         <option value="$PROJECT_DIR$/python/__init__.py" />
         <option value="$PROJECT_DIR$/python/driving_data.py" />
+        <option value="$PROJECT_DIR$/python/train_tensorflow.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="119" />
-    <option name="y" value="16" />
-    <option name="width" value="1400" />
-    <option name="height" value="864" />
+    <option name="x" value="-7" />
+    <option name="width" value="974" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -99,11 +103,12 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="last_opened_file_path" value="C:/ProgramData/Anaconda3/envs/tensorflow" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -124,6 +129,11 @@
       <option name="WORKING_DIRECTORY_PATH" value="$PROJECT_DIR$/R" />
       <option name="PASS_PARENT_ENVS" value="true" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="R.Alignment_speed_distance_main" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="StructureViewFactory">
     <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
@@ -142,25 +152,25 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="32" y="-11" width="1569" height="912" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49094567" visible="true" weight="0.17704917" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.46888888" visible="true" weight="0.19722815" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5006485" side_tool="true" weight="0.33909574" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32903227" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32890365" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32978722" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="7" sideWeight="0.4993515" visible="true" weight="0.33909574" />
-      <window_info id="Structure" order="1" sideWeight="0.5090543" side_tool="true" visible="true" weight="0.17704917" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="7" sideWeight="0.4993515" visible="true" weight="0.5016611" />
+      <window_info id="Structure" order="1" sideWeight="0.5311111" side_tool="true" visible="true" weight="0.19722815" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" sideWeight="0.501006" side_tool="true" weight="0.17574579" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
     </layout>
@@ -169,6 +179,257 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7060">
+          <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="15" selection-end-column="80" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7060">
+          <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2600">
+          <caret line="131" column="3" lean-forward="true" selection-start-line="131" selection-start-column="3" selection-end-line="131" selection-end-column="3" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7060">
+          <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="24" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7060">
+          <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2540">
+          <caret line="128" column="122" selection-end-line="128" selection-end-column="122" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6040">
+          <caret line="302" column="38" selection-start-line="302" selection-start-column="27" selection-end-line="302" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2480">
+          <caret line="125" column="120" lean-forward="true" selection-start-line="125" selection-start-column="120" selection-end-line="125" selection-end-column="120" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6040">
+          <caret line="302" column="38" selection-start-line="302" selection-start-column="27" selection-end-line="302" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" lean-forward="true" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2460">
+          <caret line="124" lean-forward="true" selection-start-line="124" selection-end-line="124" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6040">
+          <caret line="302" column="38" lean-forward="true" selection-start-line="302" selection-start-column="27" selection-end-line="302" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1720">
+          <caret line="87" column="41" lean-forward="true" selection-start-line="87" selection-start-column="41" selection-end-line="89" selection-end-column="23" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7120">
+          <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1700">
+          <caret line="86" selection-start-line="62" selection-end-line="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1060">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7120">
+          <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/simData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1700">
+          <caret line="86" selection-start-line="62" selection-end-line="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/driving_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1060">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#582#592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6052">
@@ -180,9 +441,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1445">
           <caret line="86" selection-start-line="62" selection-end-line="86" />
-          <folding>
-            <element signature="e#194#213#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -207,9 +465,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1445">
           <caret line="86" lean-forward="true" selection-start-line="62" selection-end-line="86" />
-          <folding>
-            <element signature="e#194#213#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -231,13 +486,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/simData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#194#213#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/python/driving_data.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -277,33 +526,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6052">
-          <caret line="356" column="30" selection-start-line="356" selection-start-column="30" selection-end-line="356" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/python/simConst.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3520">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="19" selection-end-line="176" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/simData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="86" selection-start-line="62" selection-end-line="86" />
-          <folding>
-            <element signature="e#194#213#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1360">
+          <caret line="69" column="87" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/alignment_calculation_ver0.2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7060">
+          <caret line="353" selection-start-line="353" selection-end-line="360" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/driving_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+        <state>
+          <caret selection-end-line="15" selection-end-column="80" />
           <folding>
             <element signature="e#582#592#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/train_tensorflow.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
         </state>
       </provider>
     </entry>

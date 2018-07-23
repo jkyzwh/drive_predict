@@ -39,7 +39,7 @@ import simConst as const
 导入几何线形视野数据
 '''
 import pandas as pd
-
+print('导入几何线形在驾驶人视野中的矩阵描述文件')
 if operat_system == 'Windows':
     road_view_up = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_up.csv', header=0, encoding='utf-8')
     road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', header=0, encoding='utf-8')
@@ -51,48 +51,98 @@ else:
 # ==================================================================================
 '''
 导入驾驶模拟器试验数据
+首先读取数据目录下所有的csv文件
 '''
+import os
 
-
-
+simdata_path = 'D:\\PROdata\\Data\\S_Z'
 ver = 4.0  # 使用的数据来自于winroad的版本号
 colnames = const.simdata_colname(ver)
 
+"""
+#定义函数，将模拟器数据按空间序列排序，间距为传入函数的数值
+"""
 
-def getfilename(path):  # 定义读取指定path的全部csv文件
-    file_list = os.listdir(path)
-    csv_name_list = []    # 将csv文件名存入指定列表
+
+def orderDataDis(data, ver, step=1):
+    if ver == 4:
+        data['Dis'] = pd.to_numeric(data['Dis']) // step * step
+    elif ver == 10:
+        data['disFromRoadStart'] = pd.to_numeric(data['disFromRoadStart'])// step * step
+    elif ver == 12:
+        data['disFromRoadStart'] = pd.to_numeric(data['disFromRoadStart']) // step * step
+    else:
+        print('Uc-winroad版本号错误')
+    data_order = data.drop_duplicates(['Dis'])  # 丢弃重复的行数据
+    return data_order
+
+
+def getsimdata(data_path):  # 读取指定目录下的csv文件，存储在一个列表中
+    file_list = os.listdir(data_path)
+    sim_data = []
     for i in file_list:
         # os.path.splitext():分离文件名与扩展名
         if os.path.splitext(i)[1] == '.csv':
-            csv_name_list.append(i)
-    return (csv_name_list)
+            if operat_system == 'Windows':
+                csv_path = data_path + '\\' + i
+            elif operat_system == 'Linux':
+                csv_path = data_path + '/' + i
+            else:
+                pass
+            print('import', csv_path)
+            sim_data.append(pd.read_csv(csv_path, header=0, names=colnames, low_memory=False))
+        else:
+            pass
+
+    return sim_data
 
 
-"""
-# 定义函数，将目录下所有csv文件读入工作环境，并全部存入一个列表进行存储
-"""
+simData_list = getsimdata(simdata_path)
+'''
+将所有人数据汇总到一个数据框，增加驾驶人ID数据列
+'''
+colnames.append('driver_ID')
+sim_data = pd.DataFrame(columns=colnames)
+for i in range(len(simData_list)):
+    A = simData_list[i]
+    A['driver_ID'] = ('ID_' + str(i))
+    B = orderDataDis(A, 4, step=1)
+    print('正在合并第', (i+1), '个数据')
+    sim_data = pd.concat([sim_data, B], ignore_index=True, sort=False)  # 将所有数据合并
+
+del(A, B)
+
+# ==================================================================================
+'''
+下面要做的是将驾驶人视野内数据与需要的试验数据匹配
+'''
+ID_list = sim_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所有的驾驶人ID
+training_data = pd.DataFrame()
+for i in range(len(ID_list)):
+    locals()['ID_'+str(i)] = sim_data[sim_data['driver_ID'] == 'ID_0']
+    if ver == 4:
+        locals()['ID_'+str(i)] = locals()['ID_'+str(i)][['driver_ID', "Dis", "Speed", "Acc_surge", "Acc_sway", 'Steering',
+                                                         'Acc_pedal', 'Brake_pedal']]
+        locals()['testdata_'+str(i)] = pd.merge(locals()['ID_'+str(i)], road_view_up, how='inner', right_on='k_location'
+                                                , left_on='Dis')
+        print('将第', i, '个驾驶员数据添加进训练集')
+        training_data = pd.concat([training_data, locals()['testdata_'+str(i)]], ignore_index=True, sort=False)  # 将所有数据合并
+'''
+将训练数据集存储在硬盘上
+'''
+'''
+需要时将存储在硬盘上的文件读入内存
+'''
+
+if operat_system == 'Windows':
+    training_data.to_csv('D:\\PROdata\\Data\\landxml\\training_data.csv', index=False, sep=',')
+elif operat_system == 'Linux':
+    training_data.to_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', index=False, sep=',')
+else:
+    pass
 
 
-def getsimdata(path):
-    simulator_data = []
-    for i in path:   # 读入csv数据
-        locals()['ID_'+os.path.splitext(i)[0]]=pd.read_csv(i, header=0, names=data_name)
-        simulator_data.append(locals()['ID_'+os.path.splitext(i)[0]])
-    return(simulator_data)
 
-
-"""
-# 定义函数，将目录下所有csv文件读入工作环境，并合并至一个列表进行存储
-驾驶人编号增加变量ID予以表示
-"""
-
-
-def getsimudata_inone(sim_dataName):
-    simulator_data=pd.DataFrame()
-    for i in sim_dataName:    # 读入csv数据
-        A = pd.read_csv(i, header=0, names=data_name)
-        A['ID']=os.path.splitext(i)[0]
-        simulator_data=pd.concat([simulator_data, A])  # 将所有数据合并
-    return(simulator_data)
-
+'''
+使用上行数据进行训练，下行数据用于测试
+'''
