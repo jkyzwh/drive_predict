@@ -33,6 +33,15 @@ ID_list = training_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所
 data_train = training_data[training_data['driver_ID'] != ID_list[0]]
 data_test = training_data[training_data['driver_ID'] == ID_list[0]]
 
+# '''
+# 对每一列数据进行标准化
+# '''
+# # colnames = data_train.columns.values.tolist()
+# data_train =data_train.drop(['driver_ID', 'Dis', 'k_location'], axis=1)
+# # data_train = data_train.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
+# data_test = data_test.drop(['driver_ID', 'Dis', 'k_location'], axis=1)
+# # data_test = data_test.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
+
 '''
 将训练集和测试集均转化为numpy数组
 '''
@@ -45,10 +54,13 @@ x_test = np.array(data_test.iloc[0:len(data_test), list(range(9, len(data_test.i
 y_test = np.array(data_test['Speed'])
 len(x_test)-len(y_test)
 
-x_train.astype(np.float32)
-y_train.astype(np.float32)
-x_test.astype(np.float32)
-y_test.astype(np.float32)
+x_train = x_train.astype(np.float32)
+y_train = y_train.astype(np.float32)
+x_test = x_test.astype(np.float32)
+y_test = y_test.astype(np.float32)
+
+
+
 
 
 '''

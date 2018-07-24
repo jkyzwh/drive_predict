@@ -147,13 +147,6 @@ elif operat_system == 'Linux':
 else:
     pass
 
-
-
-
-
-
-
-
 '''
 使用上行数据进行训练，下行数据用于测试
 '''

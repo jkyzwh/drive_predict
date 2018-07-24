@@ -266,14 +266,14 @@ road_info = pd.merge(temp_dir, temp_height, on='k_location')
 del (temp_height, temp_dir)
 
 # 绘制方位角和纵断面图
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-plt.figure(num=1)
-plt.plot(road_info['k_location'], road_info['height'])
-
-plt.figure(num=2)
-plt.plot(road_info['k_location'], road_info['dir'], color='red')
-plt.show()
+# plt.figure(num=1)
+# plt.plot(road_info['k_location'], road_info['height'])
+#
+# plt.figure(num=2)
+# plt.plot(road_info['k_location'], road_info['dir'], color='red')
+# plt.show()
 
 '''
 生成从起点至终点的整桩号矩阵，纵轴是间距为1的桩号数列，横轴是可视距离内每个点的
@@ -304,6 +304,10 @@ road_view_up = pd.DataFrame(columns=colnames)
 road_view_down = pd.DataFrame(columns=colnames)
 '''
 计算驾驶人行驶过程中几何线形的视觉矩阵
+同时完成数据标准化工作，保证数据值域为【0，1】
+距离取倒数
+方位角除2pi
+高差除项目最大高差
 '''
 #
 # for i in range(len(road_view.index)):
@@ -311,15 +315,19 @@ road_view_down = pd.DataFrame(columns=colnames)
 '''
 上行方向计算
 '''
+import math
+
+maxheight_dif = max(road_info['height'])-min(road_info['height'])
+
 for i in range(len(road_info.index) - view_distance - 2):
     temp_row = [road_info['k_location'].iloc[i]]
     for j in range(1, view_distance + 1):
         a = road_info['k_location'].iloc[i + j] - road_info['k_location'].iloc[i]
         b = road_info['dir'].iloc[i + j] - road_info['dir'].iloc[i]
         c = road_info['height'].iloc[i + j] - road_info['height'].iloc[i]
-        temp_row.append(a)
-        temp_row.append(b)
-        temp_row.append(c)
+        temp_row.append((view_distance-a)/view_distance)  # 为了在训练时提高距离较近点的重要性
+        temp_row.append(b/(2*math.pi))
+        temp_row.append(c/maxheight_dif)
         print('up', 'i=', i, 'j=', j)
     d = pd.DataFrame(np.array(temp_row)).T
     d.columns = colnames
@@ -329,6 +337,7 @@ for i in range(len(road_info.index) - view_distance - 2):
 '''
 下行方向计算
 '''
+
 road_info_down = road_info.sort_values(['k_location'], ascending=False)
 
 for i in range(len(road_info_down.index) - view_distance - 2):
@@ -337,9 +346,9 @@ for i in range(len(road_info_down.index) - view_distance - 2):
         a = abs(road_info_down['k_location'].iloc[i + j] - road_info_down['k_location'].iloc[i])
         b = road_info_down['dir'].iloc[i + j] - road_info_down['dir'].iloc[i]
         c = road_info_down['height'].iloc[i + j] - road_info_down['height'].iloc[i]
-        temp_row.append(a)
-        temp_row.append(b)
-        temp_row.append(c)
+        temp_row.append((view_distance-a)/view_distance)
+        temp_row.append(b/(2*math.pi))
+        temp_row.append(c/maxheight_dif)
         print('down', 'i=', i, 'j=', j)
     d = pd.DataFrame(np.array(temp_row)).T
     d.columns = colnames
