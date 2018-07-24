@@ -54,14 +54,13 @@ x_test = np.array(data_test.iloc[0:len(data_test), list(range(9, len(data_test.i
 y_test = np.array(data_test['Speed'])
 len(x_test)-len(y_test)
 
+y_train = y_train/np.max(y_train)
+y_test = y_test/np.max(y_test)
+
 x_train = x_train.astype(np.float32)
 y_train = y_train.astype(np.float32)
 x_test = x_test.astype(np.float32)
 y_test = y_test.astype(np.float32)
-
-
-
-
 
 '''
 构建神经网络，利用训练集进行测试
@@ -69,12 +68,70 @@ y_test = y_test.astype(np.float32)
 
 import keras
 from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
-from keras.preprocessing.image import ImageDataGenerator
+from keras.layers.core import Dense, Activation
 from keras.optimizers import SGD, Adadelta, Adagrad
-from keras.utils import np_utils, generic_utils
-from keras.utils import plot_model
+
+np.random.seed(1671)
+
+# 隐藏层神经元数量
+N_HIDDEN = 32
+BATCH_SIZE = 1024
+
+
+only_alignmentModel = Sequential()
+
+# 输入层
+
+only_alignmentModel.add(Dense(N_HIDDEN, input_shape=(675,)))
+only_alignmentModel.add(Activation('sigmoid'))
+
+# 隐藏层
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('sigmoid'))
+
+# 输出层
+
+only_alignmentModel.add(Dense(1))
+only_alignmentModel.add(Activation('sigmoid'))
+
+'''
+在训练模型之前，您需要配置学习过程，这是通过 compile 方法完成的。它接收三个参数：
+优化器 optimizer。它可以是现有优化器的字符串标识符，如 rmsprop 或 adagrad，也可以是 Optimizer 类的实例。详见：optimizers。
+损失函数 loss，模型试图最小化的目标函数。它可以是现有损失函数的字符串标识符，如 categorical_crossentropy 或  mse，也可以是一个目标函数。详见：losses。
+评估标准 metrics。对于任何分类问题，你都希望将其设置为 metrics = ['accuracy']。评估标准可以是现有的标准的字符串标识符，也可以是自定义的评估标准函数。
+'''
+only_alignmentModel.compile(
+    loss='mean_squared_error',
+    optimizer='Adagrad',
+    metrics=['accuracy']
+)
+
+
+'''
+训练神经网络
+'''
+first_keras = only_alignmentModel.fit(
+    x_train, y_train,
+    batch_size=BATCH_SIZE,
+    epochs=2,
+    verbose=1,
+    validation_split=0.2
+)
+
+score = only_alignmentModel.evaluate(x_test, y_test, verbose=1)
+
+print("test score", score[0])
+print("测试准确率是", score[1])
 
 
 
