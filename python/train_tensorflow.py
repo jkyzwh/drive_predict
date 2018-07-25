@@ -36,20 +36,17 @@ ID_list = training_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所
 data_train = training_data[training_data['driver_ID'] != ID_list[0]]
 data_test = training_data[training_data['driver_ID'] == ID_list[0]]
 
-data_train['Speed'] = data_train['Speed']/SPEED_LIMIT
-data_train['speed_lastlocation'] = data_train['speed_lastlocation']/SPEED_LIMIT
-data_train['speed_limit'] = data_train['speed_limit']/SPEED_LIMIT
+# SettingWithCopyWarning: 警告的解决方式
+data_train.loc[:, 'Speed'] = data_train['Speed'].apply(lambda x: (x/SPEED_LIMIT))
+data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-data_test['Speed'] = data_test['Speed']/SPEED_LIMIT
-data_test['speed_lastlocation'] = data_test['speed_lastlocation']/SPEED_LIMIT
-data_test['speed_limit'] = data_test['speed_limit']/SPEED_LIMIT
-
+data_test.loc[:, 'Speed'] = data_test['Speed'].apply(lambda x: (x/SPEED_LIMIT))
+data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
 # # colnames = data_train.columns.values.tolist()
 
-# # data_train = data_train.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
-
-# # data_test = data_test.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
 
 '''
 将训练集和测试集均转化为numpy数组
@@ -60,7 +57,6 @@ data_test = data_test.drop(['driver_ID', 'Dis', 'k_location', "Acc_surge", "Acc_
              'Acc_pedal', 'Brake_pedal'], axis=1)
 
 
-
 x_train = np.array(data_train.iloc[0:len(data_train), list(range(1, len(data_train.iloc[0])))])
 y_train = np.array(data_train['Speed'])
 len(x_train)-len(y_train)
@@ -69,13 +65,11 @@ x_test = np.array(data_test.iloc[0:len(data_test), list(range(1, len(data_test.i
 y_test = np.array(data_test['Speed'])
 len(x_test)-len(y_test)
 
-y_train = y_train/SPEED_LIMIT
-y_test = y_test/SPEED_LIMIT
-
 x_train = x_train.astype(np.float32)
 y_train = y_train.astype(np.float32)
 x_test = x_test.astype(np.float32)
 y_test = y_test.astype(np.float32)
+
 
 '''
 构建神经网络，利用训练集进行测试
@@ -84,35 +78,44 @@ y_test = y_test.astype(np.float32)
 import keras
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation
-from keras.optimizers import SGD, Adadelta, Adagrad
+from keras.optimizers import SGD, Adadelta, Adagrad, RMSprop
+from keras.layers import Dropout
+from keras import metrics
+
+# from keras.utils import np_utils  #用于分类器的矢量编码
 
 np.random.seed(1671)
 
 # 隐藏层神经元数量
-N_HIDDEN = 1024
-BATCH_SIZE = 2048
+N_HIDDEN = 320
+BATCH_SIZE = 120
 
 
 only_alignmentModel = Sequential()
 
 # 输入层
 
-only_alignmentModel.add(Dense(N_HIDDEN, input_shape=(675,)))
-only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Dense(units=N_HIDDEN, input_dim=677))
+only_alignmentModel.add(Activation('relu'))
+
 
 # 隐藏层
 
 only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
-only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
-only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
-only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
-only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
+only_alignmentModel.add(Activation('relu'))
+only_alignmentModel.add(Dropout(0.2))
 
+only_alignmentModel.add(Dense(N_HIDDEN))
+only_alignmentModel.add(Activation('relu'))
+only_alignmentModel.add(Dropout(0.2))
+
+# only_alignmentModel.add(Dense(N_HIDDEN))
+# only_alignmentModel.add(Activation('relu'))
+# only_alignmentModel.add(Dropout(0.2))
+#
+# only_alignmentModel.add(Dense(N_HIDDEN))
+# only_alignmentModel.add(Activation('relu'))
+# only_alignmentModel.add(Dropout(0.2))
 
 # 输出层
 
@@ -125,10 +128,24 @@ only_alignmentModel.add(Activation('sigmoid'))
 损失函数 loss，模型试图最小化的目标函数。它可以是现有损失函数的字符串标识符，如 categorical_crossentropy 或  mse，也可以是一个目标函数。详见：losses。
 评估标准 metrics。对于任何分类问题，你都希望将其设置为 metrics = ['accuracy']。评估标准可以是现有的标准的字符串标识符，也可以是自定义的评估标准函数。
 '''
+# 定义评估函数
+def Y_pred(y_true, y_pred):
+    return y_pred*100
+
+def Y_true(y_true, y_pred):
+    return y_true*100
+
+def plus_pred(y_true, y_pred):
+    return (y_pred-y_true)*100
+
+def correct_rates(y_true, y_pred):
+    return (y_pred-y_true)*100/y_true
+
 only_alignmentModel.compile(
-    loss='mean_squared_error',
-    optimizer='Adagrad',
-    metrics=['accuracy']
+    # loss='mean_squared_error',
+    loss='mean_absolute_error',
+    optimizer='RMSprop',
+    metrics=['accuracy', Y_pred, Y_true, plus_pred, correct_rates]
 )
 
 
@@ -138,9 +155,9 @@ only_alignmentModel.compile(
 first_keras = only_alignmentModel.fit(
     x_train, y_train,
     batch_size=BATCH_SIZE,
-    epochs=2,
+    epochs=20,
     verbose=1,
-    validation_split=0.1
+    validation_split=0.2
 )
 
 score = only_alignmentModel.evaluate(x_test, y_test, verbose=1)

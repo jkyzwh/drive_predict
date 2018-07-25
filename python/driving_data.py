@@ -139,7 +139,7 @@ ID_list = sim_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所有�
 training_data = pd.DataFrame()
 for i in range(len(ID_list)):
     locals()['ID_' + str(i)] = sim_data[sim_data['driver_ID'] == ('ID_' + str(i))]
-    if ver == 4:
+    if UC_VER == 4:
         locals()['ID_' + str(i)] = locals()['ID_' + str(i)][
             ['driver_ID', "Dis", "Speed", 'speed_lastlocation', 'speed_limit', "Acc_surge", "Acc_sway", 'Steering',
              'Acc_pedal', 'Brake_pedal']]
