@@ -15,6 +15,9 @@ import platform
 operation_system = platform.system()
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 
+UC_VER = 4   # 使用的数据来自于winroad的版本号
+SPEED_LIMIT = 100/3.6  # 限速设置
+
 # import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -33,29 +36,41 @@ ID_list = training_data.drop_duplicates(['driver_ID'])['driver_ID']  # 获取所
 data_train = training_data[training_data['driver_ID'] != ID_list[0]]
 data_test = training_data[training_data['driver_ID'] == ID_list[0]]
 
-# '''
-# 对每一列数据进行标准化
-# '''
+data_train['Speed'] = data_train['Speed']/SPEED_LIMIT
+data_train['speed_lastlocation'] = data_train['speed_lastlocation']/SPEED_LIMIT
+data_train['speed_limit'] = data_train['speed_limit']/SPEED_LIMIT
+
+data_test['Speed'] = data_test['Speed']/SPEED_LIMIT
+data_test['speed_lastlocation'] = data_test['speed_lastlocation']/SPEED_LIMIT
+data_test['speed_limit'] = data_test['speed_limit']/SPEED_LIMIT
+
+
 # # colnames = data_train.columns.values.tolist()
-# data_train =data_train.drop(['driver_ID', 'Dis', 'k_location'], axis=1)
+
 # # data_train = data_train.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
-# data_test = data_test.drop(['driver_ID', 'Dis', 'k_location'], axis=1)
+
 # # data_test = data_test.apply(lambda x: (x-np.min(x))/(np.max(x)-np.min(x)))
 
 '''
 将训练集和测试集均转化为numpy数组
 '''
+data_train =data_train.drop(['driver_ID', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+             'Acc_pedal', 'Brake_pedal'], axis=1)
+data_test = data_test.drop(['driver_ID', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+             'Acc_pedal', 'Brake_pedal'], axis=1)
 
-x_train = np.array(data_train.iloc[0:len(data_train), list(range(9, len(data_train.iloc[0])))])
+
+
+x_train = np.array(data_train.iloc[0:len(data_train), list(range(1, len(data_train.iloc[0])))])
 y_train = np.array(data_train['Speed'])
 len(x_train)-len(y_train)
 
-x_test = np.array(data_test.iloc[0:len(data_test), list(range(9, len(data_test.iloc[0])))])
+x_test = np.array(data_test.iloc[0:len(data_test), list(range(1, len(data_test.iloc[0])))])
 y_test = np.array(data_test['Speed'])
 len(x_test)-len(y_test)
 
-y_train = y_train/np.max(y_train)
-y_test = y_test/np.max(y_test)
+y_train = y_train/SPEED_LIMIT
+y_test = y_test/SPEED_LIMIT
 
 x_train = x_train.astype(np.float32)
 y_train = y_train.astype(np.float32)
@@ -74,8 +89,8 @@ from keras.optimizers import SGD, Adadelta, Adagrad
 np.random.seed(1671)
 
 # 隐藏层神经元数量
-N_HIDDEN = 32
-BATCH_SIZE = 1024
+N_HIDDEN = 1024
+BATCH_SIZE = 2048
 
 
 only_alignmentModel = Sequential()
@@ -86,6 +101,7 @@ only_alignmentModel.add(Dense(N_HIDDEN, input_shape=(675,)))
 only_alignmentModel.add(Activation('sigmoid'))
 
 # 隐藏层
+
 only_alignmentModel.add(Dense(N_HIDDEN))
 only_alignmentModel.add(Activation('sigmoid'))
 only_alignmentModel.add(Dense(N_HIDDEN))
@@ -96,8 +112,7 @@ only_alignmentModel.add(Dense(N_HIDDEN))
 only_alignmentModel.add(Activation('sigmoid'))
 only_alignmentModel.add(Dense(N_HIDDEN))
 only_alignmentModel.add(Activation('sigmoid'))
-only_alignmentModel.add(Dense(N_HIDDEN))
-only_alignmentModel.add(Activation('sigmoid'))
+
 
 # 输出层
 
@@ -125,7 +140,7 @@ first_keras = only_alignmentModel.fit(
     batch_size=BATCH_SIZE,
     epochs=2,
     verbose=1,
-    validation_split=0.2
+    validation_split=0.1
 )
 
 score = only_alignmentModel.evaluate(x_test, y_test, verbose=1)
