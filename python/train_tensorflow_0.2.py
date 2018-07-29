@@ -41,11 +41,11 @@ data_test = training_data[training_data['driver_ID'] == ID_list[0]].copy()
 # SettingWithCopyWarning: 警告的解决方式
 data_train.loc[:, 'Speed'] = data_train['Speed'].apply(lambda x: (x/SPEED_LIMIT))
 data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
-data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+# data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
 data_test.loc[:, 'Speed'] = data_test['Speed'].apply(lambda x: (x/SPEED_LIMIT))
 data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
-data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+# data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
 # # colnames = data_train.columns.values.tolist()
 
@@ -53,9 +53,9 @@ data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SP
 '''
 将训练集和测试集均转化为numpy数组
 '''
-data_train =data_train.drop(['driver_ID', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+data_train =data_train.drop(['driver_ID', 'speed_limit', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
              'Acc_pedal', 'Brake_pedal'], axis=1)
-data_test = data_test.drop(['driver_ID', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+data_test = data_test.drop(['driver_ID', 'Dis', 'speed_limit', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
              'Acc_pedal', 'Brake_pedal'], axis=1)
 
 
@@ -95,6 +95,8 @@ VERBOSE = 1  # 训练过程的中间结果的输出方式
 VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
 DROPOUT = 0.3
 EPOCHS = 2  # 训练的次数
+SHAPE = 676
+
 '''
 构建一个全连接神经网络，用于训练
 '''
@@ -102,7 +104,7 @@ DenseModel = Sequential()
 
 # 输入层
 
-DenseModel.add(Dense(units=N_HIDDEN, input_dim=677))
+DenseModel.add(Dense(units=N_HIDDEN, input_dim=SHAPE))
 DenseModel.add(Activation('relu'))
 
 # 隐藏层
@@ -198,19 +200,21 @@ data_predict = road_view_down.drop(['k_location'], axis=1)
 '''
 
 BEGIN_SPEED = 10/3.6
-SHAPE = 677
+# SHAPE = 676
 
 colnames = data_predict.columns.tolist()
 colnames.insert(0, 'speed_lastlocation')
-colnames.insert(1, 'speed_limit')
+# colnames.insert(1, 'speed_limit')
 
 data_predict['speed_lastlocation'] = BEGIN_SPEED
-data_predict['speed_limit'] = SPEED_LIMIT
+# data_predict['speed_limit'] = SPEED_LIMIT
 
 data_predict = data_predict.reindex(columns=colnames)
 
 x_predict = np.array(data_predict)
 x_predict = x_predict.astype(np.float32)
+
+y_speed = []
 
 for i in range(len(x_predict)):
     x_i = x_predict[i, :]
@@ -218,5 +222,6 @@ for i in range(len(x_predict)):
     y_i = DenseModel.predict(x_i, batch_size=1, verbose=1, steps=None)
     y = y_i[0][0]
     print('预测运行速度为', str(y*100), 'km/h')
+    y_speed.append(y*100)
 
 
