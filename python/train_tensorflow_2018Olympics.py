@@ -15,8 +15,13 @@ import platform
 operation_system = platform.system()
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 
-UC_VER = 12   # 使用的数据来自于winroad的版本号
-SPEED_LIMIT = 40/3.6  # 限速设置
+UC_VER = 13   # 使用的数据来自于winroad的版本号
+if UC_VER >=10:
+    SPEED_LIMIT = 80  # 限速设置
+elif UC_VER == 4:
+    SPEED_LIMIT = 40/3.6  # 限速设置
+else:
+    pass
 
 # import tensorflow as tf
 import numpy as np
@@ -27,7 +32,7 @@ print('读入存贮在硬盘上的驾驶行为数据和几何线形数据整合�
 if operation_system == 'Windows':
     training_data = pd.read_csv('D:\\PROdata\\Data\\2018Olympics\\Driver_Data\\training_data.csv', header=0, encoding='utf-8')
 elif operation_system == 'Linux':
-    training_data = pd.read_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', header=0, encoding='utf-8')
+    training_data = pd.read_csv('/home/zhwh/Data/2018Olympics/Driver_Data/training_data.csv', header=0, encoding='utf-8')
 else:
     pass
 '''
@@ -40,7 +45,7 @@ data_test = training_data[training_data['driver_ID'] == ID_list[0]].copy()
 
 # SettingWithCopyWarning: 警告的解决方式
 if UC_VER == 4:
-    data_train.loc[:, 'Speed'] = data_train['Speed'].apply(lambda x: (x/SPEED_LIMIT))
+    data_train['Speed'] = data_train['Speed']/SPEED_LIMIT
     data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
     # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
@@ -48,12 +53,12 @@ if UC_VER == 4:
     data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
     # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 elif UC_VER >= 10:
-    data_train.loc[:, 'speedKMH'] = data_train['speedKMH'].apply(lambda x: (x / SPEED_LIMIT))
-    data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x / SPEED_LIMIT))
+    data_train['speedKMH'] = data_train['speedKMH'] / SPEED_LIMIT
+    data_train['speed_lastlocation'] = data_train['speed_lastlocation']/ SPEED_LIMIT
     # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-    data_test.loc[:, 'speedKMH'] = data_test['speedKMH'].apply(lambda x: (x / SPEED_LIMIT))
-    data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x / SPEED_LIMIT))
+    data_test['speedKMH'] = data_test['speedKMH']/ SPEED_LIMIT
+    data_test.loc['speed_lastlocation'] = data_test['speed_lastlocation']/ SPEED_LIMIT
     # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
 # # colnames = data_train.columns.values.tolist()
@@ -111,11 +116,11 @@ from keras import metrics
 np.random.seed(1671)  # 重复性测试
 
 N_HIDDEN = 64  # 隐藏层神经元数量
-BATCH_SIZE = 120  # 每次训练的数据数量
+BATCH_SIZE = 1  # 每次训练的数据数量
 VERBOSE = 1  # 训练过程的中间结果的输出方式
 VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
-DROPOUT = 0.3
-EPOCHS = 2  # 训练的次数
+DROPOUT = 0.1
+EPOCHS = 1  # 训练的次数
 SHAPE = 271
 
 '''
@@ -134,9 +139,9 @@ DenseModel.add(Dense(N_HIDDEN))
 DenseModel.add(Activation('relu'))
 DenseModel.add(Dropout(DROPOUT))
 
-DenseModel.add(Dense(N_HIDDEN))
-DenseModel.add(Activation('relu'))
-DenseModel.add(Dropout(DROPOUT))
+# DenseModel.add(Dense(N_HIDDEN))
+# DenseModel.add(Activation('relu'))
+# DenseModel.add(Dropout(DROPOUT))
 
 # DenseModel.add(Dense(N_HIDDEN))
 # DenseModel.add(Activation('relu'))
@@ -149,7 +154,7 @@ DenseModel.add(Dropout(DROPOUT))
 # 输出层
 
 DenseModel.add(Dense(1))
-DenseModel.add(Activation('sigmoid'))
+DenseModel.add(Activation('relu'))
 
 '''
 在训练模型之前，您需要配置学习过程，这是通过 compile 方法完成的。它接收三个参数：
@@ -161,11 +166,11 @@ DenseModel.add(Activation('sigmoid'))
 
 
 def y_pred(y_true, y_pred):
-    return y_pred*100
+    return y_pred*SPEED_LIMIT
 
 
 def y_true(y_true, y_pred):
-    return y_true*100
+    return y_true*SPEED_LIMIT
 
 # def plus_pred(y_true, y_pred):
 #     return (y_pred-y_true)
@@ -178,14 +183,19 @@ def correct_rates(y_true, y_pred):
     return (y_pred-y_true)*100/y_true
 
 # 编译全连接神经网络DenseModel
+'''
+实例化优化器函数，clipnorm用于控制梯度裁剪
+'''
+sgd = SGD(lr=0.01, clipnorm=1.)
 
 DenseModel.compile(
-    loss='mean_squared_error',
-    optimizer='adam',
+    loss='MSE',
+    optimizer=sgd,
     # metrics=['accuracy', y_pred, y_true, plus_pred100, correct_rates]
     # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
     metrics=[y_pred, y_true, plus_pred100, correct_rates]
 )
+
 
 '''
 训练神经网络
@@ -202,6 +212,12 @@ score = DenseModel.evaluate(x_test, y_test, batch_size=BATCH_SIZE, verbose=VERBO
 
 print("test score", score[0])
 print("测试的MAPE，平均绝对百分误差为", score[1])
+
+
+from keras.utils import plot_model
+plot_model(DenseModel)
+
+
 
 '''
 读入下行road_view数据，假设速度初始值和限速值，测试训练模型的准确程度

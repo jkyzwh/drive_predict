@@ -30,7 +30,7 @@ elif operation_system == 'Linux':
 
 sys.path.append(scrip_dir)  # 将当前目录加入搜索路径++
 
-UC_VER = 12   # 使用的数据来自于winroad的版本号
+UC_VER = 13   # 使用的数据来自于winroad的版本号
 SPEED_LIMIT = 40/3.6  # 限速设置
 
 # import simData as sim
@@ -48,8 +48,8 @@ if operation_system == 'Windows':
     road_view_up = pd.read_csv('D:\\PROdata\\Data\\2018Olympics\\Road_Data\\road_view_up.csv', header=0, encoding='utf-8')
     road_view_down = pd.read_csv('D:\\PROdata\\Data\\2018Olympics\\Road_Data\\road_view_down.csv', header=0, encoding='utf-8')
 elif operation_system == 'Linux':
-    road_view_up = pd.read_csv('/home/zhwh/My_cloud/data/landxml/road_view_up.csv', header=0, encoding='utf-8')
-    road_view_down = pd.read_csv('/home/zhwh/My_cloud/data/landxml/road_view_down.csv', header=0, encoding='utf-8')
+    road_view_up = pd.read_csv('/home/zhwh/Data/2018Olympics/Driver_Data/road_view_up.csv', header=0, encoding='utf-8')
+    road_view_down = pd.read_csv('/home/zhwh/Data/2018Olympics/Driver_Data/road_view_down.csv', header=0, encoding='utf-8')
 else:
     pass
 
@@ -63,7 +63,7 @@ import os
 if operation_system == 'Windows':
     simdata_path = 'D:\\PROdata\\Data\\2018Olympics\\Driver_Data\\up'
 elif operation_system == 'Linux':
-    simdata_path = '/home/zhwh/Data/S_Z'
+    simdata_path = '/home/zhwh/Data/2018Olympics/Driver_Data/up'
 else:
     pass
 
@@ -82,7 +82,7 @@ def orderDataDis(data, ver, step=1):
     elif ver == 10:
         data['disFromRoadStart'] = pd.to_numeric(data['disFromRoadStart']) // step * step
         data_order = data.drop_duplicates(['disFromRoadStart'])  # 丢弃重复的行数据
-    elif ver == 12:
+    elif ver >= 12:
         data['disFromRoadStart'] = pd.to_numeric(data['disFromRoadStart']) // step * step
         data_order = data.drop_duplicates(['disFromRoadStart'])  # 丢弃重复的行数据
     else:
@@ -97,13 +97,15 @@ def getsimdata(data_path):  # 读取指定目录下的csv文件，存储在一�
         # os.path.splitext():分离文件名与扩展名
         if os.path.splitext(i)[1] == '.csv':
             if operation_system == 'Windows':
-                csv_path = data_path + '\\' + i
+                csv_path = data_path + '\\' + str(i)
             elif operation_system == 'Linux':
-                csv_path = data_path + '/' + i
+                csv_path = data_path + '/' + str(i)
             else:
                 pass
             print('import', csv_path)
-            sim_data.append(pd.read_csv(csv_path, header=0, names=colnames, low_memory=False))
+            temp = pd.read_csv(csv_path, header=0, low_memory=False)
+            temp.columns = colnames
+            sim_data.append(temp)
         else:
             pass
 
@@ -119,6 +121,7 @@ simData_list = getsimdata(simdata_path)
 '''
 colnames.append('driver_ID')
 # sim_data = pd.DataFrame(columns=colnames)
+sim_data = pd.DataFrame()
 for i in range(len(simData_list)):
     A = simData_list[i]
     A['driver_ID'] = ('ID_' + str(i))
@@ -180,7 +183,7 @@ for i in range(len(ID_list)):
 if operation_system == 'Windows':
     training_data.to_csv('D:\\PROdata\\Data\\2018Olympics\\Driver_Data\\training_data.csv', index=False, sep=',')
 elif operation_system == 'Linux':
-    training_data.to_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', index=False, sep=',')
+    training_data.to_csv('/home/zhwh/Data/2018Olympics/Driver_Data/training_data.csv', index=False, sep=',')
 else:
     pass
 

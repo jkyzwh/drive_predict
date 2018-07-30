@@ -4,6 +4,8 @@
 data_name：驾驶模拟数据集重新定义列名
 """
 # ver是winroad 数据的版本号
+
+
 def simdata_colname(ver):
     if ver == 4:
         data_name=[ "Time",
@@ -253,6 +255,97 @@ def simdata_colname(ver):
                      "roadSurface",              # surface
                      "averageFlux",              # averageFlux
                      "X"]                        # X
+    elif ver == 13:
+        data_name = ["simTime",  # Time
+                     "logTime",  # TimeStamp
+                     "type",  # Type
+                     "carModel",  # Model
+                     "logID",  # ID
+                     "customID",  # customID
+                     "logDescription",  # description
+                     "positionX",  # position X
+                     "positionY",  # position Y
+                     "positionZ",  # position Z
+                     "yawAngle",  # yawAngle
+                     "pitchAngle",  # pitchAngle
+                     "rollAngle",  # rollAngle
+                     "directionX",  # direction X
+                     "directionY",  # direction Y
+                     "directionZ",  # direction Z
+                     "bodyPitchAngle",  # bodyPitchAngle
+                     "bodyRollAngle",  # bodyRollAngle
+                     "RPM",  # RPM
+                     "gearNumber",  # gearNumber
+                     "speedXMS",  # speedVectInMetresPerSecond X
+                     "speedYMS",  # speedVectInMetresPerSecond Y
+                     "speedZMS",  # speedVectInMetresPerSecond Z
+                     "speedKMH",  # speedInKmPerHour
+                     "speedMS",  # speedInMetresPerSecond
+                     "accXMS2",  # localAccelInMetresPerSecond2 X
+                     "accYMS2",  # localAccelInMetresPerSecond2 Y
+                     "accZMS2",  # localAccelInMetresPerSecond2 Z
+                     "bodyRotSpeedYawRS",  # bodyRotSpeedInRadsPerSecond Yaw
+                     "bodyRotSpeedPitchRS",  # bodyRotSpeedInRadsPerSecond Pitch
+                     "bodyRotSpeedRollRS",  # bodyRotSpeedInRadsPerSecond Roll
+                     "bodyRotAccYawRS2",  # bodyRotAccelInRadsPerSecond Yaw
+                     "bodyRotAccPitchRS2",  # bodyRotAccelInRadsPerSecond Pitch
+                     "bodyRotAccRollRS2",  # bodyRotAccelInRadsPerSecond Roll
+                     "rotSpeedYawRS",  # rotSpeedInRadsPerSecond Yaw
+                     "rotSpeedPitchRS",  # rotSpeedInRadsPerSecond Pitch
+                     "rotSpeedRollRS",  # rotSpeedInRadsPerSecond Roll
+                     "rotAccYawRS2",  # rotAccelInRadsPerSecond Yaw
+                     "rotAccPitchRS2",  # rotAccelInRadsPerSecond Pitch
+                     "rotAccRollRS2",  # rotAccelInRadsPerSecond Roll
+                     "disTravelled",  # distanceTravelled
+                     "steeringValue",  # steering
+                     "appSteering",  # appliedSteering
+                     "steeringVelocity",  # steeringVelocity
+                     "turningCurvature",  # turningCurvature
+                     "gasPedal",  # throttle
+                     "pedalTorque",  # pedalTorque
+                     "appGasPedal",  # appliedThrottle
+                     "brakePedal",  # brake
+                     "appBrake",  # appliedBrake
+                     "lightState",  # lightState
+                     "automaticControl",  # automaticControl
+                     "dragForce",  # dragForce
+                     "carMass",  # mass
+                     "carWheelBase",  # wheelBase
+                     "centerOfGravityHeight",  # centerOfGravityHeight
+                     "centerOfGravityPosition",  # centerOfGravityPosition
+                     "rollAxisHeight",  # rollAxisHeight
+                     "trailerState",  # trailer
+                     "trailerAngle",  # trailerAngle
+                     "trailerPitchAngle",  # trailerPitchAngle
+                     "trailerWheelbase",  # trailerWheelbase
+                     "isInIntersection",  # inIntersection
+                     "roadName",  # road
+                     "disFromRoadStart",  # distanceAlongRoad
+                     "latestRoad",  # latestRoad
+                     "disFromLatestRoadStart",  # distanceAnlongLatestRoad
+                     "disToLeftBorder",  # distanceToLeftBorder
+                     "disToRightBorder",  # distanceToRightBorder
+                     "carriagewayWidth",  # carriagewayWidth
+                     "roadOffset",  # offsetFromRoadCenter
+                     "laneOffset",  # offsetFromLaneCenter
+                     "logitudinalSlope",  # roadLongitudinalSlop
+                     "lateralSlope",  # roadLateralSlop
+                     "laneNumber",  # laneNumber
+                     "laneWidth",  # laneWidth
+                     "laneDirectionX",  # laneDirection X
+                     "laneDirectionY",  # laneDirection Y
+                     "laneDirectionZ",  # laneDirection Z
+                     "laneCurvature",  # laneCurvature
+                     "isDrivingForward",  # drivingForwards
+                     "speedLimit",  # speedLimit
+                     "isSpeedOver",  # speedOver
+                     "leftLaneOverlap",  # leftLaneOverLap
+                     "rightLaneOverlap",  # rightLaneOverLap
+                     "collisionWithUser",  # collicionWithUser
+                     "pedestrianNumber",  # pedestriansNumber
+                     "roadSurface",  # surface
+                     "averageFlux",
+                     "X"]  # averageFlux
     else:
-        print('不存在的版本号')
-    return (data_name)
+        print('不存在'+str(ver)+'的版本号')
+    return data_name

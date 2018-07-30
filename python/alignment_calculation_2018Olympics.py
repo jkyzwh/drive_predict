@@ -24,8 +24,8 @@ if operation_system == 'Windows':
     alignment_datapath = 'D:\\PROdata\\Data\\2018Olympics\\Road_Data\\up\\Road_2_shangxing_Alignment.csv'
     para_datapath = 'D:\\PROdata\\Data\\2018Olympics\\Road_Data\\up\\Road_2_shangxing_ParaCurve.csv'
 elif operation_system == 'Linux':
-    alignment_datapath = '/home/zhwh/My_cloud/data/landxml/SZhighway_Alignment.csv'
-    para_datapath = '/home/zhwh/My_cloud/data/landxml/SZhighway_ParaCurve.csv'
+    alignment_datapath = '/home/zhwh/Data/2018Olympics/Road_Data/up/Road_2_shangxing_Alignment.csv'
+    para_datapath = '/home/zhwh/Data/2018Olympics/Road_Data/up/Road_2_shangxing_ParaCurve.csv'
 else:
     pass
 # =============================================================================
@@ -365,10 +365,11 @@ if operation_system == 'Windows':
     road_view_up.to_csv('D:\\PROdata\\Data\\2018Olympics\\Road_Data\\road_view_up.csv', index=False, sep=',')
     road_view_down.to_csv('D:\\PROdata\\Data\\2018Olympics\\Road_Data\\road_view_down.csv', index=False, sep=',')
 elif operation_system == 'Linux':
-    road_view_up.to_csv('/home/zhwh/My_cloud/data/landxml/road_view_up.csv', index=False, sep=',')
-    road_view_down.to_csv('/home/zhwh/My_cloud/data/landxml/road_view_down.csv', index=False, sep=',')
+    road_view_up.to_csv('/home/zhwh/Data/2018Olympics/Driver_Data/road_view_up.csv', index=False, sep=',')
+    road_view_down.to_csv('/home/zhwh/Data/2018Olympics/Driver_Data/road_view_down.csv', index=False, sep=',')
 else:
     pass
+
 
 '''
 需要时将存储在硬盘上的文件读入内存
