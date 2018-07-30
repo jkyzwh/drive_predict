@@ -15,8 +15,8 @@ import platform
 operation_system = platform.system()
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 
-UC_VER = 4   # 使用的数据来自于winroad的版本号
-SPEED_LIMIT = 100/3.6  # 限速设置
+UC_VER = 12   # 使用的数据来自于winroad的版本号
+SPEED_LIMIT = 40/3.6  # 限速设置
 
 # import tensorflow as tf
 import numpy as np
@@ -25,7 +25,7 @@ import pandas as pd
 print('读入存贮在硬盘上的驾驶行为数据和几何线形数据整合后的训练数据集')
 
 if operation_system == 'Windows':
-    training_data = pd.read_csv('D:\\PROdata\\Data\\landxml\\training_data.csv', header=0, encoding='utf-8')
+    training_data = pd.read_csv('D:\\PROdata\\Data\\2018Olympics\\Driver_Data\\training_data.csv', header=0, encoding='utf-8')
 elif operation_system == 'Linux':
     training_data = pd.read_csv('/home/zhwh/My_cloud/data/landxml/training_data.csv', header=0, encoding='utf-8')
 else:
@@ -39,13 +39,22 @@ data_train = training_data[training_data['driver_ID'] != ID_list[0]].copy()
 data_test = training_data[training_data['driver_ID'] == ID_list[0]].copy()
 
 # SettingWithCopyWarning: 警告的解决方式
-data_train.loc[:, 'Speed'] = data_train['Speed'].apply(lambda x: (x/SPEED_LIMIT))
-data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
-# data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+if UC_VER == 4:
+    data_train.loc[:, 'Speed'] = data_train['Speed'].apply(lambda x: (x/SPEED_LIMIT))
+    data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+    # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-data_test.loc[:, 'Speed'] = data_test['Speed'].apply(lambda x: (x/SPEED_LIMIT))
-data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
-# data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+    data_test.loc[:, 'Speed'] = data_test['Speed'].apply(lambda x: (x/SPEED_LIMIT))
+    data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+    # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+elif UC_VER >= 10:
+    data_train.loc[:, 'speedKMH'] = data_train['speedKMH'].apply(lambda x: (x / SPEED_LIMIT))
+    data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x / SPEED_LIMIT))
+    # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
+
+    data_test.loc[:, 'speedKMH'] = data_test['speedKMH'].apply(lambda x: (x / SPEED_LIMIT))
+    data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x / SPEED_LIMIT))
+    # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
 # # colnames = data_train.columns.values.tolist()
 
@@ -53,19 +62,31 @@ data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(l
 '''
 将训练集和测试集均转化为numpy数组
 '''
-data_train =data_train.drop(['driver_ID', 'speed_limit', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
-             'Acc_pedal', 'Brake_pedal'], axis=1)
-data_test = data_test.drop(['driver_ID', 'Dis', 'speed_limit', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
-             'Acc_pedal', 'Brake_pedal'], axis=1)
+if UC_VER == 4:
+    data_train =data_train.drop(['driver_ID', 'speed_limit', 'Dis', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+                 'Acc_pedal', 'Brake_pedal'], axis=1)
+    data_test = data_test.drop(['driver_ID', 'Dis', 'speed_limit', 'k_location', "Acc_surge", "Acc_sway", 'Steering',
+                 'Acc_pedal', 'Brake_pedal'], axis=1)
+elif UC_VER >= 10:
+    data_train = data_train.drop(['driver_ID', 'speed_limit', 'disFromRoadStart', 'k_location'], axis=1)
+    data_test = data_test.drop(['driver_ID', 'speed_limit', 'disFromRoadStart', 'k_location'], axis=1)
 
+if UC_VER == 4:
+    x_train = np.array(data_train.iloc[0:len(data_train), list(range(1, len(data_train.iloc[0])))])
+    y_train = np.array(data_train['Speed'])
+    len(x_train)-len(y_train)
 
-x_train = np.array(data_train.iloc[0:len(data_train), list(range(1, len(data_train.iloc[0])))])
-y_train = np.array(data_train['Speed'])
-len(x_train)-len(y_train)
+    x_test = np.array(data_test.iloc[0:len(data_test), list(range(1, len(data_test.iloc[0])))])
+    y_test = np.array(data_test['Speed'])
+    len(x_test)-len(y_test)
+elif UC_VER >= 10:
+    x_train = np.array(data_train.iloc[0:len(data_train), list(range(1, len(data_train.iloc[0])))])
+    y_train = np.array(data_train['speedKMH'])
+    len(x_train) - len(y_train)
 
-x_test = np.array(data_test.iloc[0:len(data_test), list(range(1, len(data_test.iloc[0])))])
-y_test = np.array(data_test['Speed'])
-len(x_test)-len(y_test)
+    x_test = np.array(data_test.iloc[0:len(data_test), list(range(1, len(data_test.iloc[0])))])
+    y_test = np.array(data_test['speedKMH'])
+    len(x_test) - len(y_test)
 
 x_train = x_train.astype(np.float32)
 y_train = y_train.astype(np.float32)
@@ -89,13 +110,13 @@ from keras import metrics
 
 np.random.seed(1671)  # 重复性测试
 
-N_HIDDEN = 128  # 隐藏层神经元数量
+N_HIDDEN = 64  # 隐藏层神经元数量
 BATCH_SIZE = 120  # 每次训练的数据数量
 VERBOSE = 1  # 训练过程的中间结果的输出方式
 VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
 DROPOUT = 0.3
 EPOCHS = 2  # 训练的次数
-SHAPE = 676
+SHAPE = 271
 
 '''
 构建一个全连接神经网络，用于训练
@@ -162,7 +183,8 @@ DenseModel.compile(
     loss='mean_squared_error',
     optimizer='adam',
     # metrics=['accuracy', y_pred, y_true, plus_pred100, correct_rates]
-    metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
+    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
+    metrics=[y_pred, y_true, plus_pred100, correct_rates]
 )
 
 '''
