@@ -267,14 +267,14 @@ road_info = pd.merge(temp_dir, temp_height, on='k_location')
 del (temp_height, temp_dir)
 
 # 绘制方位角和纵断面图
-import matplotlib.pyplot as plt
-
-plt.figure(num=1)
-plt.plot(road_info['k_location'], road_info['height'])
-
-plt.figure(num=2)
-plt.plot(road_info['k_location'], road_info['dir'], color='red')
-plt.show()
+# import matplotlib.pyplot as plt
+#
+# plt.figure(num=1)
+# plt.plot(road_info['k_location'], road_info['height'])
+#
+# plt.figure(num=2)
+# plt.plot(road_info['k_location'], road_info['dir'], color='red')
+# plt.show()
 
 '''
 生成从起点至终点的整桩号矩阵，纵轴是间距为1的桩号数列，横轴是可视距离内每个点的

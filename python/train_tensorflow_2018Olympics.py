@@ -46,11 +46,11 @@ data_test = training_data[training_data['driver_ID'] == ID_list[0]].copy()
 # SettingWithCopyWarning: 警告的解决方式
 if UC_VER == 4:
     data_train['Speed'] = data_train['Speed']/SPEED_LIMIT
-    data_train.loc[:, 'speed_lastlocation'] = data_train['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+    data_train['speed_lastlocation'] = data_train['speed_lastlocation']/SPEED_LIMIT
     # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-    data_test.loc[:, 'Speed'] = data_test['Speed'].apply(lambda x: (x/SPEED_LIMIT))
-    data_test.loc[:, 'speed_lastlocation'] = data_test['speed_lastlocation'].apply(lambda x: (x/SPEED_LIMIT))
+    data_test['Speed'] = data_test['Speed']/SPEED_LIMIT
+    data_test['speed_lastlocation'] = data_test['speed_lastlocation']/SPEED_LIMIT
     # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 elif UC_VER >= 10:
     data_train['speedKMH'] = data_train['speedKMH'] / SPEED_LIMIT

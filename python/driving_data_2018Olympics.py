@@ -31,7 +31,12 @@ elif operation_system == 'Linux':
 sys.path.append(scrip_dir)  # 将当前目录加入搜索路径++
 
 UC_VER = 13   # 使用的数据来自于winroad的版本号
-SPEED_LIMIT = 40/3.6  # 限速设置
+if UC_VER >=10:
+    SPEED_LIMIT = 80  # 限速设置
+elif UC_VER == 4:
+    SPEED_LIMIT = 40/3.6  # 限速设置
+else:
+    pass
 
 # import simData as sim
 import simConst as const
