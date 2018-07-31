@@ -45,19 +45,19 @@ data_test = training_data[training_data['driver_ID'] == ID_list[0]].copy()
 
 # SettingWithCopyWarning: 警告的解决方式
 if UC_VER == 4:
-    data_train['Speed'] = data_train['Speed']/SPEED_LIMIT
+    data_train['Speed'] = data_train['Speed'] / SPEED_LIMIT
     data_train['speed_lastlocation'] = data_train['speed_lastlocation']/SPEED_LIMIT
     # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-    data_test['Speed'] = data_test['Speed']/SPEED_LIMIT
+    data_test['Speed'] = data_test['Speed'] / SPEED_LIMIT
     data_test['speed_lastlocation'] = data_test['speed_lastlocation']/SPEED_LIMIT
     # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 elif UC_VER >= 10:
-    data_train['speedKMH'] = data_train['speedKMH'] / SPEED_LIMIT
+    data_train['speedKMH'] = data_train['speedKMH']/ SPEED_LIMIT
     data_train['speed_lastlocation'] = data_train['speed_lastlocation']/ SPEED_LIMIT
     # data_train.loc[:, 'speed_limit'] = data_train['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
-    data_test['speedKMH'] = data_test['speedKMH']/ SPEED_LIMIT
+    data_test['speedKMH'] = data_test['speedKMH'] / SPEED_LIMIT
     data_test.loc['speed_lastlocation'] = data_test['speed_lastlocation']/ SPEED_LIMIT
     # data_test.loc[:, 'speed_limit'] = data_test['speed_limit'].apply(lambda x: (x/SPEED_LIMIT))
 
@@ -115,12 +115,12 @@ from keras import metrics
 
 np.random.seed(1671)  # 重复性测试
 
-N_HIDDEN = 64  # 隐藏层神经元数量
-BATCH_SIZE = 1  # 每次训练的数据数量
+N_HIDDEN = 128  # 隐藏层神经元数量
+BATCH_SIZE = 2  # 每次训练的数据数量
 VERBOSE = 1  # 训练过程的中间结果的输出方式
 VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
 DROPOUT = 0.1
-EPOCHS = 1  # 训练的次数
+EPOCHS = 5 # 训练的次数
 SHAPE = 271
 
 '''
@@ -139,17 +139,17 @@ DenseModel.add(Dense(N_HIDDEN))
 DenseModel.add(Activation('relu'))
 DenseModel.add(Dropout(DROPOUT))
 
-# DenseModel.add(Dense(N_HIDDEN))
-# DenseModel.add(Activation('relu'))
-# DenseModel.add(Dropout(DROPOUT))
+DenseModel.add(Dense(N_HIDDEN))
+DenseModel.add(Activation('relu'))
+DenseModel.add(Dropout(DROPOUT))
 
-# DenseModel.add(Dense(N_HIDDEN))
-# DenseModel.add(Activation('relu'))
-# DenseModel.add(Dropout(0.2))
-#
-# DenseModel.add(Dense(N_HIDDEN))
-# DenseModel.add(Activation('relu'))
-# DenseModel.add(Dropout(0.2))
+DenseModel.add(Dense(N_HIDDEN))
+DenseModel.add(Activation('relu'))
+DenseModel.add(Dropout(DROPOUT))
+
+DenseModel.add(Dense(N_HIDDEN))
+DenseModel.add(Activation('relu'))
+DenseModel.add(Dropout(DROPOUT))
 
 # 输出层
 
@@ -213,10 +213,34 @@ score = DenseModel.evaluate(x_test, y_test, batch_size=BATCH_SIZE, verbose=VERBO
 print("test score", score[0])
 print("测试的MAPE，平均绝对百分误差为", score[1])
 
+'''
+利用测试集进行一下测试
+'''
+x_predict = x_test
+y_speed = []
+BEGIN_SPEED = 5/SPEED_LIMIT
+for i in range(len(x_predict)-1):
+    if i == 0:
+        x_predict[0, 0] = BEGIN_SPEED
+        x_i = x_i.reshape(1, SHAPE)
+        y_i = DenseModel.predict(x_i, batch_size=1, verbose=1, steps=None)
+        y = y_i[0][0]
+        x_predict[i + 1, 0] = y
+    elif i > 0:
+        x_i = x_predict[i, :]
+        x_i = x_i.reshape(1, SHAPE)
+        y_i = DenseModel.predict(x_i, batch_size=1, verbose=1, steps=None)
+        y = y_i[0][0]
+        x_predict[i + 1, 0] = y
+    print('预测运行速度为', str(y*SPEED_LIMIT), 'km/h')
+    y_speed.append(y*SPEED_LIMIT)
 
+y_test = y_test[0: (len(y_test)-1)]
+y_predict = pd.DataFrame(y_speed, y_test*SPEED_LIMIT)
+# =================================================================================
+# 神经网络的可视化
 from keras.utils import plot_model
 plot_model(DenseModel)
-
 
 
 '''
@@ -237,7 +261,7 @@ data_predict = road_view_down.drop(['k_location'], axis=1)
 然后调用 re_index 属性将数据框根据列名顺序重排
 '''
 
-BEGIN_SPEED = 10/3.6
+BEGIN_SPEED = 5/SPEED_LIMIT
 # SHAPE = 676
 
 colnames = data_predict.columns.tolist()
@@ -254,12 +278,14 @@ x_predict = x_predict.astype(np.float32)
 
 y_speed = []
 
-for i in range(len(x_predict)):
+for i in range(len(x_predict)-1):
     x_i = x_predict[i, :]
     x_i = x_i.reshape(1, SHAPE)
     y_i = DenseModel.predict(x_i, batch_size=1, verbose=1, steps=None)
     y = y_i[0][0]
-    print('预测运行速度为', str(y*100), 'km/h')
-    y_speed.append(y*100)
+    x_predict[i + 1, 0] = y
+    print('预测运行速度为', str(y*SPEED_LIMIT), 'km/h')
+    y_speed.append(y*SPEED_LIMIT)
 
 
+y_predict = pd.DataFrame(y_speed)

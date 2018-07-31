@@ -106,15 +106,15 @@ alignment_fix = alignment_fix[['NO', 'K_Start', 'K_End', 'Length', 'Road_Type', 
 1. 根据相邻曲线表，填写直线段方位角
 2. 将缓和曲线接圆曲线时，圆曲线的方位角修正为不包含缓和曲线线元
 '''
-for i in range(len(alignment_fix.index)):
-    aa = alignment_fix.iloc[i]
-    if aa['Road_Type'] == 'Spiral':
-        a = alignment_fix['DirStart'].iloc[i]
-        b = alignment_fix['DirEnd'].iloc[i]
-        alignment_fix['DirStart'].values[i] = b
-        alignment_fix['DirEnd'].values[i] = a
-    else:
-        pass
+# for i in range(len(alignment_fix.index)):
+#     aa = alignment_fix.iloc[i]
+#     if aa['Road_Type'] == 'Spiral':
+#         a = alignment_fix['DirStart'].iloc[i]
+#         b = alignment_fix['DirEnd'].iloc[i]
+#         alignment_fix['DirStart'].values[i] = b
+#         alignment_fix['DirEnd'].values[i] = a
+#     else:
+#         pass
 
 for i in range(len(alignment_fix.index)):
     print(i)
@@ -200,6 +200,8 @@ for i in range(len(alignment_fix.index)):
             R1 = 20000
         elif alignment_fix['Road_Type'].iloc[i - 1] == 'Curve':
             R1 = alignment_fix['Radius'].iloc[i - 1]
+        elif alignment_fix['Road_Type'].iloc[i - 1] == 'Spiral':
+            R1 = 20000
         else:
             pass
 
@@ -207,6 +209,8 @@ for i in range(len(alignment_fix.index)):
             R2 = alignment_fix['Radius'].iloc[i + 1]
         elif alignment_fix['Road_Type'].iloc[i + 1] == 'Line':
             R2 = 20000
+        elif alignment_fix['Road_Type'].iloc[i + 1] == 'Spiral':
+            R2 = 2000
         else:
             pass
 
