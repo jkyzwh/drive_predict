@@ -175,6 +175,7 @@ def y_true(y_true, y_pred):
 # def plus_pred(y_true, y_pred):
 #     return (y_pred-y_true)
 
+
 def plus_pred100(y_true, y_pred):
     return (y_pred-y_true)*100
 
@@ -222,6 +223,7 @@ BEGIN_SPEED = 5/SPEED_LIMIT
 for i in range(len(x_predict)-1):
     if i == 0:
         x_predict[0, 0] = BEGIN_SPEED
+        x_i = x_predict[i, :]
         x_i = x_i.reshape(1, SHAPE)
         y_i = DenseModel.predict(x_i, batch_size=1, verbose=1, steps=None)
         y = y_i[0][0]
@@ -236,11 +238,14 @@ for i in range(len(x_predict)-1):
     y_speed.append(y*SPEED_LIMIT)
 
 y_test = y_test[0: (len(y_test)-1)]
-y_predict = pd.DataFrame(y_speed, y_test*SPEED_LIMIT)
+y_predict = pd.DataFrame()
+y_predict['y_predict'] = y_speed
+y_predict['y_test'] = y_test*SPEED_LIMIT
 # =================================================================================
 # 神经网络的可视化
+
 from keras.utils import plot_model
-plot_model(DenseModel)
+plot_model(DenseModel, to_file='model.png', show_shapes='True')
 
 
 '''

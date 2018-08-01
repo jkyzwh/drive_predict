@@ -24,7 +24,7 @@ import platform
 operation_system = platform.system()
 
 if operation_system == 'Windows':
-    scrip_dir = sys.path[11] + '/python'  # d当前脚本所在的project路径
+    scrip_dir = sys.path[10] + '/python'  # d当前脚本所在的project路径
 elif operation_system == 'Linux':
     scrip_dir = sys.path[8] + '/python'  # d当前脚本所在的project路径
 
