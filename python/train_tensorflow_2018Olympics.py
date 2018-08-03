@@ -243,10 +243,10 @@ y_predict['y_predict'] = y_speed
 y_predict['y_test'] = y_test*SPEED_LIMIT
 # =================================================================================
 # 神经网络的可视化
-
-from keras.utils import plot_model
-plot_model(DenseModel, to_file='model.png', show_shapes='True')
-
+#
+# from keras.utils import plot_model
+# plot_model(DenseModel, to_file='model.png', show_shapes='True')
+#
 
 '''
 读入下行road_view数据，假设速度初始值和限速值，测试训练模型的准确程度
@@ -294,3 +294,142 @@ for i in range(len(x_predict)-1):
 
 
 y_predict = pd.DataFrame(y_speed)
+
+# ==================================================================================
+# 利用RNN 循环神经网络训练模型
+# ==================================================================================
+# from keras.layers.recurrent import SimpleRNN
+from keras.models import Sequential
+from keras.layers import Dense, LSTM, TimeDistributed, Activation, Dropout
+from keras.optimizers import SGD, Adadelta, Adagrad, RMSprop, Adam
+
+np.random.seed(1671)  # 重复性测试
+
+N_HIDDEN = 128  # 隐藏层神经元数量
+BATCH_SIZE = 2  # 每次训练的数据数量
+VERBOSE = 1  # 训练过程的中间结果的输出方式
+VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
+DROPOUT = 0.1
+EPOCHS = 5 # 训练的次数
+SHAPE = 271
+
+'''
+构建一个全连接神经网络，用于训练
+'''
+# keras.layers.recurrent.LSTM(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True,
+#                             kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal',
+#                             bias_initializer='zeros', unit_forget_bias=True, kernel_regularizer=None,
+#                             recurrent_regularizer=None, bias_regularizer=None, activity_regularizer=None,
+#                             kernel_constraint=None, recurrent_constraint=None, bias_constraint=None, dropout=0.0,
+#                             recurrent_dropout=0.0)
+# 参数
+# units：输出维度
+# activation：激活函数，为预定义的激活函数名（参考激活函数）
+# recurrent_activation: 为循环步施加的激活函数（参考激活函数）
+# use_bias: 布尔值，是否使用偏置项
+# kernel_initializer：权值初始化方法，为预定义初始化方法名的字符串，或用于初始化权重的初始化器。参考initializers
+# recurrent_initializer：循环核的初始化方法，为预定义初始化方法名的字符串，或用于初始化权重的初始化器。参考initializers
+# bias_initializer：权值初始化方法，为预定义初始化方法名的字符串，或用于初始化权重的初始化器。参考initializers
+# kernel_regularizer：施加在权重上的正则项，为Regularizer对象
+# bias_regularizer：施加在偏置向量上的正则项，为Regularizer对象
+# recurrent_regularizer：施加在循环核上的正则项，为Regularizer对象
+# activity_regularizer：施加在输出上的正则项，为Regularizer对象
+# kernel_constraints：施加在权重上的约束项，为Constraints对象
+# recurrent_constraints：施加在循环核上的约束项，为Constraints对象
+# bias_constraints：施加在偏置上的约束项，为Constraints对象
+# dropout：0~1之间的浮点数，控制输入线性变换的神经元断开比例
+# recurrent_dropout：0~1之间的浮点数，控制循环状态的线性变换的神经元断开比例
+
+BATCH_START = 0
+TIME_STEPS = len(x_train)
+INPUT_SIZE = 1
+OUTPUT_SIZE = 1
+CELL_SIZE = 1
+LR = 0.006
+SHAPE = 271
+
+# 转换为LSTM要求的shape
+x_train_LSTM = x_train.reshape(1, TIME_STEPS, SHAPE)
+y_train_LSTM = y_train.reshape(1, TIME_STEPS, 1)
+
+LSTMModel = Sequential()
+# RNN LSTM 层
+# LSTMModel.add(LSTM(batch_input_shape=(1, TIME_STEPS, SHAPE),
+#                    units=N_HIDDEN,
+#                    return_sequences=True,
+#                    activation='relu',
+#                    # stateful=True,
+#                    ))
+LSTMModel.add(LSTM(units=N_HIDDEN,
+                   input_shape= SHAPE,
+                   # input_shape=(1, TIME_STEPS, SHAPE),
+                   activation='relu',
+                   ))
+# 隐藏层
+#
+# LSTMModel.add(Dense(N_HIDDEN))
+# LSTMModel.add(Activation('relu'))
+# LSTMModel.add(Dropout(DROPOUT))
+#
+# LSTMModel.add(Dense(N_HIDDEN))
+# LSTMModel.add(Activation('relu'))
+# LSTMModel.add(Dropout(DROPOUT))
+
+# 输出层
+
+LSTMModel.add(TimeDistributed(Dense(1)))
+LSTMModel.add(Activation('relu'))
+
+'''
+在训练模型之前，您需要配置学习过程，这是通过 compile 方法完成的。它接收三个参数：
+优化器 optimizer。它可以是现有优化器的字符串标识符，如 rmsprop 或 adagrad，也可以是 Optimizer 类的实例。详见：optimizers。
+损失函数 loss，模型试图最小化的目标函数。它可以是现有损失函数的字符串标识符，如 categorical_crossentropy 或  mse，也可以是一个目标函数。详见：losses。
+评估标准 metrics。对于任何分类问题，你都希望将其设置为 metrics = ['accuracy']。评估标准可以是现有的标准的字符串标识符，也可以是自定义的评估标准函数。
+'''
+# 根据训练数据和期望值，定义评估函数
+
+
+def y_pred(y_true, y_pred):
+    return y_pred*SPEED_LIMIT
+
+
+def y_true(y_true, y_pred):
+    return y_true*SPEED_LIMIT
+
+# def plus_pred(y_true, y_pred):
+#     return (y_pred-y_true)
+
+
+def plus_pred100(y_true, y_pred):
+    return (y_pred-y_true)*100
+
+
+def correct_rates(y_true, y_pred):
+    return (y_pred-y_true)*100/y_true
+
+# 编译全连接神经网络DenseModel
+'''
+实例化优化器函数，clipnorm用于控制梯度裁剪
+'''
+sgd = SGD(lr=0.01, clipnorm=1.)
+adam = Adam(LR)
+
+LSTMModel.compile(
+    loss='MSE',
+    optimizer=adam,
+    # metrics=['accuracy', y_pred, y_true, plus_pred100, correct_rates]
+    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
+    metrics=[y_pred, y_true, plus_pred100, correct_rates]
+)
+
+
+'''
+训练神经网络
+'''
+LSTMModel_train = LSTMModel.fit(
+    x_train_LSTM, y_train_LSTM,
+    batch_size=BATCH_SIZE,
+    epochs=EPOCHS,
+    verbose=VERBOSE,
+    validation_split=VALIDATION_SPLIT
+)
