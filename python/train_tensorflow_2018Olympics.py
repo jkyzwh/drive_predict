@@ -116,7 +116,7 @@ from keras import metrics
 np.random.seed(1671)  # 重复性测试
 
 N_HIDDEN = 128  # 隐藏层神经元数量
-BATCH_SIZE = 2  # 每次训练的数据数量
+BATCH_SIZE = 24  # 每次训练的数据数量
 VERBOSE = 1  # 训练过程的中间结果的输出方式
 VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
 DROPOUT = 0.1
@@ -172,12 +172,9 @@ def y_pred(y_true, y_pred):
 def y_true(y_true, y_pred):
     return y_true*SPEED_LIMIT
 
-# def plus_pred(y_true, y_pred):
-#     return (y_pred-y_true)
 
-
-def plus_pred100(y_true, y_pred):
-    return (y_pred-y_true)*100
+def plus_pred(y_true, y_pred):
+    return (y_pred-y_true)*SPEED_LIMIT
 
 
 def correct_rates(y_true, y_pred):
@@ -192,9 +189,9 @@ sgd = SGD(lr=0.01, clipnorm=1.)
 DenseModel.compile(
     loss='MSE',
     optimizer=sgd,
-    # metrics=['accuracy', y_pred, y_true, plus_pred100, correct_rates]
-    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
-    metrics=[y_pred, y_true, plus_pred100, correct_rates]
+    # metrics=['accuracy', y_pred, y_true, plus_pred, correct_rates]
+    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred, correct_rates]
+    metrics=[y_pred, y_true, plus_pred, correct_rates]
 )
 
 
@@ -253,9 +250,9 @@ y_predict['y_test'] = y_test*SPEED_LIMIT
 '''
 print('导入下行方向几何线形在驾驶人视野中的矩阵描述文件')
 if operation_system == 'Windows':
-    road_view_down = pd.read_csv('D:\\PROdata\\Data\\landxml\\road_view_down.csv', header=0, encoding='utf-8')
+    road_view_down = pd.read_csv('D:\\PROdata\\Data\\2018Olympics\\Road_Data\\road_view_down.csv', header=0, encoding='utf-8')
 elif operation_system == 'Linux':
-    road_view_down = pd.read_csv('/home/zhwh/My_cloud/data/landxml/road_view_down.csv', header=0, encoding='utf-8')
+    road_view_down = pd.read_csv('/home/zhwh/Data/2018Olympics/Driver_Data/road_view_down.csv', header=0, encoding='utf-8')
 else:
     pass
 
@@ -298,23 +295,8 @@ y_predict = pd.DataFrame(y_speed)
 # ==================================================================================
 # 利用RNN 循环神经网络训练模型
 # ==================================================================================
-# from keras.layers.recurrent import SimpleRNN
-from keras.models import Sequential
-from keras.layers import Dense, LSTM, TimeDistributed, Activation, Dropout
-from keras.optimizers import SGD, Adadelta, Adagrad, RMSprop, Adam
-
-np.random.seed(1671)  # 重复性测试
-
-N_HIDDEN = 128  # 隐藏层神经元数量
-BATCH_SIZE = 2  # 每次训练的数据数量
-VERBOSE = 1  # 训练过程的中间结果的输出方式
-VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
-DROPOUT = 0.1
-EPOCHS = 5 # 训练的次数
-SHAPE = 271
-
 '''
-构建一个全连接神经网络，用于训练
+构建一个LSTM神经网络，用于训练
 '''
 # keras.layers.recurrent.LSTM(units, activation='tanh', recurrent_activation='hard_sigmoid', use_bias=True,
 #                             kernel_initializer='glorot_uniform', recurrent_initializer='orthogonal',
@@ -339,53 +321,13 @@ SHAPE = 271
 # bias_constraints：施加在偏置上的约束项，为Constraints对象
 # dropout：0~1之间的浮点数，控制输入线性变换的神经元断开比例
 # recurrent_dropout：0~1之间的浮点数，控制循环状态的线性变换的神经元断开比例
+# from keras.layers.recurrent import SimpleRNN
 
-BATCH_START = 0
-TIME_STEPS = len(x_train)
-INPUT_SIZE = 1
-OUTPUT_SIZE = 1
-CELL_SIZE = 1
-LR = 0.006
-SHAPE = 271
 
-# 转换为LSTM要求的shape
-x_train_LSTM = x_train.reshape(1, TIME_STEPS, SHAPE)
-y_train_LSTM = y_train.reshape(1, TIME_STEPS, 1)
+from keras.models import Sequential
+from keras.layers import Dense, LSTM, TimeDistributed, Activation, Dropout
+from keras.optimizers import SGD, Adadelta, Adagrad, RMSprop, Adam
 
-LSTMModel = Sequential()
-# RNN LSTM 层
-# LSTMModel.add(LSTM(batch_input_shape=(1, TIME_STEPS, SHAPE),
-#                    units=N_HIDDEN,
-#                    return_sequences=True,
-#                    activation='relu',
-#                    # stateful=True,
-#                    ))
-LSTMModel.add(LSTM(units=N_HIDDEN,
-                   input_shape= SHAPE,
-                   # input_shape=(1, TIME_STEPS, SHAPE),
-                   activation='relu',
-                   ))
-# 隐藏层
-#
-# LSTMModel.add(Dense(N_HIDDEN))
-# LSTMModel.add(Activation('relu'))
-# LSTMModel.add(Dropout(DROPOUT))
-#
-# LSTMModel.add(Dense(N_HIDDEN))
-# LSTMModel.add(Activation('relu'))
-# LSTMModel.add(Dropout(DROPOUT))
-
-# 输出层
-
-LSTMModel.add(TimeDistributed(Dense(1)))
-LSTMModel.add(Activation('relu'))
-
-'''
-在训练模型之前，您需要配置学习过程，这是通过 compile 方法完成的。它接收三个参数：
-优化器 optimizer。它可以是现有优化器的字符串标识符，如 rmsprop 或 adagrad，也可以是 Optimizer 类的实例。详见：optimizers。
-损失函数 loss，模型试图最小化的目标函数。它可以是现有损失函数的字符串标识符，如 categorical_crossentropy 或  mse，也可以是一个目标函数。详见：losses。
-评估标准 metrics。对于任何分类问题，你都希望将其设置为 metrics = ['accuracy']。评估标准可以是现有的标准的字符串标识符，也可以是自定义的评估标准函数。
-'''
 # 根据训练数据和期望值，定义评估函数
 
 
@@ -396,18 +338,51 @@ def y_pred(y_true, y_pred):
 def y_true(y_true, y_pred):
     return y_true*SPEED_LIMIT
 
-# def plus_pred(y_true, y_pred):
-#     return (y_pred-y_true)
 
-
-def plus_pred100(y_true, y_pred):
-    return (y_pred-y_true)*100
+def plus_pred(y_true, y_pred):
+    return (y_pred-y_true)*SPEED_LIMIT
 
 
 def correct_rates(y_true, y_pred):
     return (y_pred-y_true)*100/y_true
 
-# 编译全连接神经网络DenseModel
+
+np.random.seed(1671)  # 重复性测试
+
+N_HIDDEN = 128  # 隐藏层神经元数量
+BATCH_SIZE = 64  # 每次训练的数据数量
+VERBOSE = 1  # 训练过程的中间结果的输出方式
+VALIDATION_SPLIT = 0.25  # 训练集用于验证的划分比例
+DROPOUT = 0.1
+EPOCHS = 50  # 训练的次数
+LR = 0.006   # 学习率
+
+# 驾驶人视野与特征值构成了视野长度×3的数组，数组行数作为LSTM的时间步长，3作为特征值数量
+# LSTM输入必须为三维数组，【桩号长度，视野长度，特征参数数量】，事实上，视野长度×3个特征可以理解为一张图片的像素构成，桩号长度类似于图片数量
+TIME_STEPS = 90
+INPUT_SIZE = 3
+
+LSTMModel = Sequential()
+LSTMModel.add(LSTM(units=N_HIDDEN,
+                   input_shape=(TIME_STEPS, INPUT_SIZE),
+                   activation='sigmoid',
+                   ))
+# 隐藏层
+LSTMModel.add(Dense(N_HIDDEN))
+LSTMModel.add(Activation('relu'))
+LSTMModel.add(Dropout(DROPOUT))
+
+LSTMModel.add(Dense(N_HIDDEN))
+LSTMModel.add(Activation('relu'))
+LSTMModel.add(Dropout(DROPOUT))
+
+# 输出层
+
+LSTMModel.add((Dense(units=1)))
+LSTMModel.add(Activation('sigmoid'))
+
+
+# 编译LSTM神经网络
 '''
 实例化优化器函数，clipnorm用于控制梯度裁剪
 '''
@@ -417,19 +392,28 @@ adam = Adam(LR)
 LSTMModel.compile(
     loss='MSE',
     optimizer=adam,
-    # metrics=['accuracy', y_pred, y_true, plus_pred100, correct_rates]
-    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred100, correct_rates]
-    metrics=[y_pred, y_true, plus_pred100, correct_rates]
+    # metrics=['accuracy']
+    # metrics=['mean_absolute_percentage_error', y_pred, y_true, plus_pred, correct_rates]
+    metrics=[y_pred, y_true, plus_pred, correct_rates]
 )
-
 
 '''
 训练神经网络
 '''
+
+# 转换为LSTM要求的shape
+
+x_train_LSTM = x_test.copy()
+x_train_LSTM = np.delete(x_train_LSTM, 0, axis=1)  # 删除前一个桩号速度，利用长短时记忆训练运行速度
+x_train_LSTM = x_train_LSTM.reshape(-1, TIME_STEPS, INPUT_SIZE)  # 将数据转换为可视距离×3的三维数组
+
+y_train_LSTM = y_test.copy()
+
+# 训练LSTM网络
 LSTMModel_train = LSTMModel.fit(
     x_train_LSTM, y_train_LSTM,
     batch_size=BATCH_SIZE,
     epochs=EPOCHS,
     verbose=VERBOSE,
     validation_split=VALIDATION_SPLIT
-)
+    )
